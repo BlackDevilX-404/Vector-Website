@@ -1,0 +1,338 @@
+/* ============================================================
+   ABOUT — Deep navy, multi-layer aperture, ghost watermark
+   ============================================================ */
+
+.about-section {
+  background-color: var(--navy-dark);
+  padding: 7rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── GHOST WATERMARK ── */
+.about-ghost-text {
+  position: absolute;
+  top: 50%;
+  left: -4%;
+  transform: translateY(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 18vw, 18rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(197,160,89,0.03);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+
+/* ── GRID ── */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── TEXT COLUMN ── */
+.about-heading {
+  font-size: clamp(2.2rem, 4vw, 4rem);
+}
+
+.about-text {
+  font-size: 1rem;
+  color: rgba(244,240,232,0.55);
+  margin-bottom: 1.5rem;
+  line-height: 1.85;
+}
+
+/* Lead paragraph — slightly brighter */
+.about-text-lead {
+  font-size: 1.08rem;
+  color: rgba(244,240,232,0.72);
+  font-style: italic;
+  border-left: 2px solid rgba(197,160,89,0.35);
+  padding-left: 1.2rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ── FEATURE CARDS ── */
+.features-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+}
+
+.feature-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.4rem;
+  background: rgba(18,33,65,0.5);
+  border-radius: 2px;
+  border-left: 2px solid var(--gold);
+  border-right: 1px solid rgba(197,160,89,0.06);
+  border-top: 1px solid rgba(197,160,89,0.06);
+  border-bottom: 1px solid rgba(197,160,89,0.06);
+  transition: var(--transition-normal);
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer sweep on hover */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(197,160,89,0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.feature-card:hover::before { opacity: 1; }
+
+.feature-card:hover {
+  transform: translateX(6px);
+  background: rgba(24,45,85,0.7);
+  box-shadow: -4px 0 20px rgba(197,160,89,0.08), var(--shadow-navy);
+  border-left-color: var(--gold-light);
+}
+
+.feature-icon {
+  font-size: 1.2rem;
+  width: 44px;
+  height: 44px;
+  background: rgba(197,160,89,0.07);
+  border: 1px solid rgba(197,160,89,0.18);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-weight: 700;
+  transition: var(--transition-fast);
+}
+
+.feature-card:hover .feature-icon {
+  background: rgba(197,160,89,0.14);
+  box-shadow: 0 0 12px rgba(197,160,89,0.2);
+}
+
+.feature-card h3 {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--paper);
+  margin-bottom: 0.2rem;
+}
+
+.feature-card p {
+  font-size: 0.82rem;
+  color: rgba(244,240,232,0.42);
+  line-height: 1.5;
+}
+
+/* ── RIGHT COLUMN: ANIMATED APERTURE ── */
+.about-image-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 460px;
+}
+
+.about-aperture {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Deep golden glow behind the rings */
+.aperture-glow-bg {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197,160,89,0.1) 0%, transparent 70%);
+  animation: pulse-glow 5s ease-in-out infinite;
+}
+
+/* Outer ring — slow rotate */
+.aperture-visual-outer {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  border: 1px solid rgba(197,160,89,0.14);
+  animation: spin-slow 35s linear infinite;
+}
+
+/* Tick dashes on outer ring */
+.aperture-ring-tick {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  border: 1px dashed rgba(197,160,89,0.07);
+  animation: spin-slow-reverse 28s linear infinite;
+}
+
+/* Mid ring — counter-rotate, glowing */
+.aperture-visual-mid {
+  position: absolute;
+  width: 268px;
+  height: 268px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(197,160,89,0.22);
+  animation: spin-slow-reverse 18s linear infinite;
+  box-shadow: 0 0 12px rgba(197,160,89,0.06) inset;
+}
+
+/* Inner glowing ring */
+.aperture-visual-inner {
+  position: absolute;
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  border: 2px solid rgba(197,160,89,0.35);
+  box-shadow:
+    0 0 24px rgba(197,160,89,0.12) inset,
+    0 0 24px rgba(197,160,89,0.1);
+  animation: spin-slow 14s linear infinite;
+}
+
+/* Pulsing innermost ring */
+.aperture-visual-pulse {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 1px solid rgba(197,160,89,0.4);
+  animation: pulse-glow 3.5s ease-in-out infinite;
+}
+
+/* Pen nib at the center */
+.aperture-visual-core {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197,160,89,0.18) 0%, rgba(10,21,40,0.9) 70%);
+  border: 1px solid rgba(197,160,89,0.45);
+  box-shadow: var(--gold-glow);
+  overflow: visible;
+}
+
+/* Blade lines crossing the aperture */
+.aperture-blade-line {
+  position: absolute;
+  width: 280px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(197,160,89,0.1), transparent);
+  transform-origin: center;
+}
+
+/* ── FLOATING STAT CARDS ── */
+.about-stat-card {
+  position: absolute;
+  background: rgba(18,33,65,0.98);
+  padding: 1.1rem 1.6rem;
+  border-radius: 2px;
+  border-top: 2px solid var(--gold);
+  border-left: 1px solid rgba(197,160,89,0.1);
+  border-right: 1px solid rgba(197,160,89,0.1);
+  border-bottom: 1px solid rgba(197,160,89,0.05);
+  box-shadow: var(--shadow-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 5;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.stat-pos-1 {
+  bottom: 10px;
+  right: -20px;
+  animation: float 6s ease-in-out infinite;
+}
+
+.stat-pos-2 {
+  top: 20px;
+  right: -10px;
+  animation: float 7.5s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.stat-pos-3 {
+  bottom: 80px;
+  left: -20px;
+  animation: float 8s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 16px rgba(197,160,89,0.35);
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: rgba(244,240,232,0.4);
+  font-weight: 500;
+  margin-top: 0.4rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 992px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-image-container {
+    margin-top: 3rem;
+    min-height: 380px;
+  }
+  .about-ghost-text {
+    font-size: clamp(6rem, 28vw, 10rem);
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .stat-pos-2 { top: -10px; right: 0; }
+  .stat-pos-3 { bottom: 50px; left: 0; }
+}
+
+@media (max-width: 480px) {
+  .about-aperture { width: 300px; height: 300px; }
+  .aperture-visual-outer { width: 280px; height: 280px; }
+  .aperture-ring-tick { width: 260px; height: 260px; }
+  .aperture-visual-mid { width: 200px; height: 200px; }
+  .aperture-visual-inner { width: 130px; height: 130px; }
+  .aperture-visual-pulse { width: 85px; height: 85px; }
+  .aperture-blade-line { width: 210px; }
+}

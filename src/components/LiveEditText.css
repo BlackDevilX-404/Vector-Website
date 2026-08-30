@@ -1,0 +1,69 @@
+/* ============================================================
+   LIVE EDIT TEXT
+   ============================================================ */
+
+.live-edit-wrapper {
+  display: inline-block;
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--gold);
+}
+
+.live-edit-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* The text being typed/deleted */
+.live-edit-text {
+  position: relative;
+  display: inline-block;
+  white-space: pre;
+}
+
+/* The blinking caret */
+.live-edit-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background-color: var(--gold);
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+.live-edit-caret.hide {
+  display: none;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── STRIKETHROUGH EFFECT ── */
+.live-edit-strike {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 3px;
+  background-color: #ff3366; /* Red pen strike */
+  width: 0%;
+  transform: translateY(-50%) rotate(-2deg);
+  transition: width 0.3s ease-out;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(255, 51, 102, 0.4);
+}
+
+.strike-active .live-edit-strike {
+  width: 100%;
+}
+
+/* Slightly dim the text when struck out */
+.strike-active .live-edit-text {
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}

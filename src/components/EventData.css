@@ -1,0 +1,346 @@
+/* ============================================================
+   EVENT DATA / LOGISTICS — Ink bg, glassmorphic cards, gold connector
+   ============================================================ */
+
+.event-data-section {
+  background-color: var(--ink);
+  padding: 7rem 0 8rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── BACKGROUND APERTURE RINGS ── */
+.logistics-bg-rings {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.logistics-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(197,160,89,0.045);
+  transform: translate(-50%, -50%);
+}
+
+.logistics-ring-1 {
+  width: 700px; height: 700px;
+  top: 50%; left: 80%;
+  animation: spin-slow 60s linear infinite;
+}
+
+.logistics-ring-2 {
+  width: 480px; height: 480px;
+  top: 50%; left: 80%;
+  border-color: rgba(197,160,89,0.07);
+  animation: spin-slow-reverse 40s linear infinite;
+}
+
+.logistics-ring-3 {
+  width: 260px; height: 260px;
+  top: 50%; left: 80%;
+  border-color: rgba(197,160,89,0.1);
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+
+/* ── HEADER ── */
+.event-data-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 2;
+}
+
+.logistics-intro {
+  color: rgba(244,240,232,0.45);
+  max-width: 480px;
+  margin: 0 auto;
+  font-size: 1rem;
+  text-align: center;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+/* ── GOLD CONNECTOR LINE ── */
+.logistics-connector {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  margin-bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* vertical offset so dots sit right above card tops */
+  padding: 0 calc(16.666% + 0px);
+}
+
+.connector-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(197,160,89,0.12) 15%,
+    rgba(197,160,89,0.55) 35%,
+    var(--gold-light) 50%,
+    rgba(197,160,89,0.55) 65%,
+    rgba(197,160,89,0.12) 85%,
+    transparent 100%
+  );
+  transform: translateY(-50%);
+}
+
+.connector-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--ink);
+  box-shadow: 0 0 12px rgba(197,160,89,0.6);
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.connector-dot-2 { animation-delay: -1s; }
+.connector-dot-3 { animation-delay: -2s; }
+
+/* ── GRID ── */
+.event-data-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── DATA CARDS ── */
+.data-card {
+  background: rgba(18,33,65,0.45);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 3px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  border: 1px solid rgba(197,160,89,0.1);
+  border-top: none; /* connector line handles the top */
+  transition: var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Full-height left gold accent line */
+.card-accent-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    var(--gold) 0%,
+    rgba(197,160,89,0.4) 50%,
+    transparent 100%
+  );
+  border-radius: 0 0 0 3px;
+  transition: opacity 0.3s ease;
+}
+
+/* Top shimmer sweep on hover */
+.data-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; right: 0;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(197,160,89,0.06) 0%,
+    transparent 50%
+  );
+  transition: left 0.5s var(--ease-out-expo);
+  pointer-events: none;
+}
+
+/* Top gold bar */
+.data-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), transparent);
+  opacity: 0.6;
+}
+
+.data-card:hover::before { left: 0; }
+
+.data-card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(197,160,89,0.25);
+  box-shadow:
+    0 24px 64px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(197,160,89,0.12),
+    var(--gold-glow-sm);
+  background: rgba(18,33,65,0.65);
+}
+
+/* ── FEATURED CENTRE CARD ── */
+.data-card-featured {
+  background: rgba(18,33,65,0.6);
+  border-color: rgba(197,160,89,0.18);
+  transform: translateY(-8px);
+}
+
+.data-card-featured::after {
+  opacity: 1;
+}
+
+.card-featured-glow {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197,160,89,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.data-card-featured:hover {
+  transform: translateY(-16px);
+}
+
+/* ── ICON ── */
+.data-icon-wrapper {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(197,160,89,0.06);
+  border: 1px solid rgba(197,160,89,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  transition: var(--transition-normal);
+  position: relative;
+  z-index: 1;
+}
+
+/* Pulsing ring on icon */
+.data-icon-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(197,160,89,0.08);
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.data-card:hover .data-icon-wrapper {
+  background: rgba(197,160,89,0.12);
+  box-shadow: var(--gold-glow-sm);
+  transform: scale(1.08);
+}
+
+/* ── TEXT ── */
+.data-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.data-stat {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5vw, 4.2rem);
+  font-weight: 700;
+  color: var(--paper);
+  line-height: 1;
+  margin-bottom: 0.9rem;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 30px rgba(197,160,89,0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.data-stat-plus {
+  font-size: 0.6em;
+  color: var(--gold);
+  vertical-align: super;
+  line-height: 0;
+}
+
+.data-desc {
+  color: rgba(244,240,232,0.45);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── LIST ── */
+.data-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 0 0;
+  text-align: left;
+  width: 100%;
+  border-top: 1px solid rgba(197,160,89,0.08);
+  padding-top: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.data-list li {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: rgba(244,240,232,0.55);
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: color 0.2s ease;
+}
+
+.data-list li:last-child { border-bottom: none; }
+
+.data-card:hover .data-list li {
+  color: rgba(244,240,232,0.65);
+}
+
+/* Gold pen-nib diamond bullet */
+.data-list li::before {
+  content: '◆';
+  color: var(--gold);
+  font-size: 0.42rem;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .event-data-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .data-card-featured { transform: none; }
+  .data-card:hover { transform: translateY(-6px); }
+  .logistics-connector { display: none; }
+  .logistics-ring-1,
+  .logistics-ring-2,
+  .logistics-ring-3 { left: 90%; }
+}

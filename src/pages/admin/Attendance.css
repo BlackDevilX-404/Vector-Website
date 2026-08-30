@@ -1,0 +1,139 @@
+.attendance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.search-bar input {
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: var(--color-text-dark);
+  width: 300px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.search-bar input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(18, 33, 65, 0.1);
+}
+
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  border: 1px solid #e2e8f0;
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-table th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.admin-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.row-attended {
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.font-medium {
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.status-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.attended {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.btn-toggle {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: var(--transition-fast);
+}
+
+.btn-mark {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-mark:hover {
+  background-color: var(--color-primary-light);
+}
+
+.btn-undo {
+  background-color: #f1f5f9;
+  color: var(--color-text-muted);
+  border: 1px solid #cbd5e1;
+}
+
+.btn-undo:hover {
+  background-color: #e2e8f0;
+  color: var(--color-primary);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.py-4 {
+  padding-top: 2rem !important;
+  padding-bottom: 2rem !important;
+}
+
+@media (max-width: 768px) {
+  .attendance-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .search-bar input {
+    width: 100%;
+  }
+}

@@ -1,0 +1,179 @@
+/* ============================================================
+   NAVBAR — Deep navy, logo-aligned
+   ============================================================ */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 68px;
+  z-index: 1000;
+  /* Paper background with slight transparency for a frosted effect */
+  background: rgba(244, 240, 232, 0.95);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(18, 33, 65, 0.1);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.navbar.scrolled {
+  background: var(--paper);
+  border-bottom-color: rgba(18, 33, 65, 0.15);
+  box-shadow: 0 4px 40px rgba(0,0,0,0.15);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+/* ── LOGO ── */
+.nav-logo-link {
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo-img {
+  height: 46px;
+  width: auto;
+  margin-top: 8px; /* Nudge down to compensate for empty space at bottom of image file */
+  transition: transform 0.3s var(--ease-out-expo), filter 0.3s ease;
+  /* No filter needed on light background */
+}
+
+.nav-logo-img:hover {
+  transform: scale(1.04);
+}
+
+/* ── LINKS ── */
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links a {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navy-dark);
+  opacity: 0.8;
+  transition: color 0.25s ease, opacity 0.25s ease;
+  position: relative;
+  padding-bottom: 3px;
+}
+
+/* Gold underline slide in from left */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 1px;
+  width: 0;
+  background: var(--gold);
+  transition: width 0.3s var(--ease-out-expo);
+}
+
+.nav-links a:hover {
+  color: var(--gold);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* ── MOBILE MENU (HAMBURGER) ── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10001; /* Above the overlay */
+}
+
+.hamburger-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--navy-dark);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* ── MOBILE MENU OVERLAY ── */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 33, 65, 0.98); /* Navy dark */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-out-expo);
+}
+
+.mobile-menu-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  text-align: center;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.4s var(--ease-out-expo);
+  transition-delay: 0.1s;
+}
+
+.mobile-menu-overlay.open .mobile-nav-links {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.mobile-nav-links a {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper);
+  transition: color 0.3s ease;
+}
+
+.mobile-nav-links a:hover {
+  color: var(--gold);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  
+  /* When menu is open, hamburger lines should turn white/gold to contrast dark navy bg */
+  .hamburger.active .hamburger-line { background: var(--paper); }
+  
+  .hamburger.active .hamburger-line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .hamburger.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.active .hamburger-line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+}

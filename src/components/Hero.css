@@ -1,0 +1,348 @@
+/* ============================================================
+   HERO — Full-screen video with logo motifs, pen nib, diagonal cut
+   ============================================================ */
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  background-color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+}
+
+/* ── VIDEO BLOCK ── */
+.video-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin-top: 68px;
+  background: var(--navy-dark);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+}
+
+/* Dark navy gradient overlay */
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10,21,40,0.55) 0%, transparent 35%, transparent 60%, rgba(7,11,20,0.85) 100%),
+    linear-gradient(135deg, rgba(18,33,65,0.4) 0%, transparent 60%);
+  z-index: 1;
+}
+
+/* Aperture rings decorating the video (logo camera motif) */
+.video-aperture-rings {
+  position: absolute;
+  right: -10%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.08;
+}
+
+.var-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.var-ring-1 { width: 600px; height: 600px; }
+.var-ring-2 { width: 450px; height: 450px; }
+.var-ring-3 { width: 300px; height: 300px; }
+.var-ring-4 { width: 150px; height: 150px; border-color: rgba(197,160,89,0.3); }
+
+/* Video controls overlay */
+.video-wrapper video {
+  z-index: 0;
+}
+
+/* ── HERO CONTENT (below video) ── */
+.hero-content-below {
+  position: relative;
+  z-index: 4;
+  background: var(--ink);
+  padding: 5rem 2rem 7rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Background aperture rings (subtle, decorative) */
+.hero-content-below::before {
+  content: '';
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(197,160,89,0.04);
+  pointer-events: none;
+}
+
+.hero-content-below::after {
+  content: '';
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  border: 1px solid rgba(197,160,89,0.06);
+  pointer-events: none;
+}
+
+.hero-text-centered {
+  max-width: 900px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── EDITORIAL SECTION LABEL ── */
+.hero-editorial-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.hero-label-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(197,160,89,0.45), transparent);
+}
+
+.hero-label-text {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(197,160,89,0.55);
+  white-space: nowrap;
+}
+
+/* ── DATE BADGE ── */
+.event-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 1.2rem;
+  background: rgba(197,160,89,0.08);
+  border: 1px solid rgba(197,160,89,0.2);
+  border-radius: 1px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 2rem;
+  animation: pulse-glow 3.5s ease-in-out infinite;
+}
+
+.event-badge::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 6px var(--gold);
+  flex-shrink: 0;
+}
+
+/* ── HERO TITLE ── */
+.hero-title-dark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(4rem, 9vw, 10rem);
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper) !important;
+  margin-bottom: 0.5rem;
+}
+
+.text-accent {
+  color: var(--gold);
+  -webkit-text-stroke: 0px;
+}
+
+.hero-subtitle-line {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1rem, 2.5vw, 1.6rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(244,240,232,0.45);
+  margin-bottom: 2.5rem;
+}
+
+/* ── PEN NIB FLOATING ELEMENT ── */
+.hero-pen-nib {
+  position: absolute;
+  top: -2rem;
+  right: 5%;
+  animation: float-rotate 5s ease-in-out infinite;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 16px rgba(197,160,89,0.5));
+  pointer-events: none;
+}
+
+/* ── HERO SUBTITLE ── */
+.hero-subtitle-dark {
+  font-size: 1.05rem;
+  color: rgba(244,240,232,0.5);
+  margin-bottom: 3rem;
+  max-width: 560px;
+  line-height: 1.75;
+  font-weight: 300;
+}
+
+/* ── COUNTDOWN TIMER ── */
+.hero-countdown {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(197,160,89,0.05);
+  border: 1px solid rgba(197,160,89,0.15);
+  border-radius: 2px;
+  min-width: 64px;
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+
+.countdown-unit:hover {
+  border-color: rgba(197,160,89,0.4);
+}
+
+.countdown-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 20px rgba(197,160,89,0.3);
+}
+
+.countdown-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244,240,232,0.35);
+}
+
+/* ── CTA BUTTONS ── */
+.hero-actions-centered {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+/* Gold primary CTA — hero specific lift */
+.hero-cta-primary {
+  padding: 1rem 3rem;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  box-shadow: 0 4px 24px rgba(197,160,89,0.18);
+}
+
+.hero-cta-primary:hover {
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-4px);
+}
+
+.btn-secondary-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 2.4rem;
+  background: transparent;
+  color: rgba(244,240,232,0.65);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(197,160,89,0.25);
+  border-radius: 2px;
+  transition: all 0.3s var(--ease-in-out);
+}
+
+.btn-secondary-dark:hover {
+  background: rgba(197,160,89,0.07);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ── SCROLL HINT ── */
+.hero-scroll-hint {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  opacity: 0.35;
+  color: var(--paper);
+}
+
+.hero-scroll-hint span {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: float 2.2s ease-in-out infinite;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .video-wrapper { height: auto; min-height: unset; aspect-ratio: 16/9; }
+  .hero-actions-centered { flex-direction: column; max-width: 300px; }
+  .btn-primary, .btn-secondary-dark { width: 100%; justify-content: center; }
+  .hero-pen-nib { display: none; }
+  .video-aperture-rings { display: none; }
+  .hero-title-dark { font-size: clamp(3rem, 12vw, 5rem); }
+  .hero-countdown { gap: 0.6rem; }
+  .countdown-unit { min-width: 52px; padding: 0.65rem 0.75rem; }
+  .countdown-value { font-size: 1.4rem; }
+  .hero-editorial-label { max-width: 260px; }
+}

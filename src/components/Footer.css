@@ -1,0 +1,199 @@
+/* ============================================================
+   FOOTER — Near-black, VECTOR watermark, gold accents
+   ============================================================ */
+
+.footer {
+  background-color: #030508;
+  color: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Giant VECTOR watermark text */
+.footer::before {
+  content: 'VECTOR';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 18vw, 18rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.015);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+/* Gold top rule */
+.footer-top-rule {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(197,160,89,0.3) 20%,
+    rgba(197,160,89,0.7) 50%,
+    rgba(197,160,89,0.3) 80%,
+    transparent 100%
+  );
+}
+
+.footer-main { padding: 5rem 0 3rem; }
+
+.footer-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+
+/* ── BRAND COLUMN ── */
+.footer-brand { display: flex; flex-direction: column; }
+
+.nav-logo-link {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.nav-logo-img {
+  height: 50px;
+  width: auto;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  filter: brightness(1.05);
+}
+
+.nav-logo-img:hover {
+  transform: scale(1.04);
+}
+
+.footer-desc {
+  color: rgba(244,240,232,0.3);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  max-width: 280px;
+}
+
+/* ── LINK COLUMNS ── */
+.footer-links h3,
+.footer-contact h3 {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+.footer-links ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.footer-links a {
+  color: rgba(244,240,232,0.35);
+  font-size: 0.9rem;
+  transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Dash slides in from left on hover */
+.footer-links a::before {
+  content: '—';
+  color: var(--gold);
+  font-size: 0.7rem;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transition: width 0.25s ease, opacity 0.25s ease;
+}
+
+.footer-links a:hover {
+  color: var(--paper);
+}
+
+.footer-links a:hover::before {
+  width: 1.4rem;
+  opacity: 1;
+}
+
+/* ── CONTACT ── */
+.footer-contact p {
+  color: rgba(244,240,232,0.35);
+  margin-bottom: 0.55rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+/* ── SOCIAL ICONS ── */
+.social-links {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 1.5rem;
+}
+
+.social-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(244,240,232,0.35);
+  transition: var(--transition-normal);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.social-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.social-icon span { position: relative; z-index: 1; }
+
+.social-icon:hover {
+  border-color: var(--gold);
+  color: var(--navy-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-gold);
+}
+
+.social-icon:hover::before { opacity: 1; }
+
+/* ── BOTTOM BAR ── */
+.footer-bottom {
+  text-align: center;
+  padding: 1.4rem;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  color: rgba(244,240,232,0.2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 2.5rem;
+  }
+  .footer-desc { max-width: 100%; }
+  .footer::before { font-size: 5rem; }
+  .social-links { justify-content: center; }
+  .footer-links a::before { display: none; }
+}
