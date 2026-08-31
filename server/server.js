@@ -52,7 +52,7 @@ function parseGroupNum(groupStr) {
 // GET all participants
 app.get('/api/participants', async (req, res) => {
   try {
-    const participants = await Participant.find().sort({ registrationDate: -1 });
+    const participants = await Participant.find().sort({ participantId: 1 });
     res.json(participants);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch participants' });
@@ -121,12 +121,44 @@ app.post('/api/participants/upload-excel', upload.single('file'), async (req, re
     const errors = [];
 
     for (const row of rows) {
-      // Map columns (case-insensitive key match)
-      const name = (row['Name'] || row['NAME'] || row['name'] || '').toString().trim();
-      const clubName = (row['Club Name'] || row['CLUB NAME'] || row['club name'] || row['ClubName'] || '').toString().trim();
-      const groupRaw = (row['Group'] || row['GROUP'] || row['group'] || '').toString().trim();
-      const portfolio = (row['Portfolio'] || row['PORTFOLIO'] || row['portfolio'] || '').toString().trim();
-      const sNo = parseInt(row['S.No'] || row['SNo'] || row['s.no'] || row['Sno'] || 0, 10) || undefined;
+      const getVal = (keywords) => {
+        const keys = Object.keys(row);
+        
+        // 1. Exact match (ignoring spaces/special chars)
+        for (const kw of keywords) {
+          const target = kw.toLowerCase().replace(/[^a-z0-9]/g, '');
+          const match = keys.find(k => k.toLowerCase().replace(/[^a-z0-9]/g, '') === target);
+          if (match) return row[match];
+        }
+        
+        // 2. Exact word match
+        for (const kw of keywords) {
+          const cleanKwSpace = kw.toLowerCase().replace(/[^a-z0-9]/g, ' ').trim();
+          if (!cleanKwSpace) continue;
+          const match = keys.find(k => {
+            const cleanKeySpace = k.toLowerCase().replace(/[^a-z0-9]/g, ' ').trim();
+            return ` ${cleanKeySpace} `.includes(` ${cleanKwSpace} `);
+          });
+          if (match) return row[match];
+        }
+        
+        // 3. Partial substring match
+        for (const kw of keywords) {
+          const target = kw.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (!target) continue;
+          const match = keys.find(k => k.toLowerCase().replace(/[^a-z0-9]/g, '').includes(target));
+          if (match) return row[match];
+        }
+        
+        return '';
+      };
+
+      const name = (getVal(['name', 'participant']) ?? '').toString().trim();
+      const clubName = (getVal(['club', 'institution', 'college', 'school', 'organization']) ?? '').toString().trim();
+      const groupRaw = (getVal(['group', 'team']) ?? '').toString().trim();
+      const portfolio = (getVal(['portfolio', 'designation', 'role', 'position']) ?? '').toString().trim();
+      const sNoRaw = getVal(['sno', 's.no', 'sl no', 'serial', 'id']);
+      const sNo = parseInt(sNoRaw, 10) || undefined;
 
       if (!name) continue;
 
@@ -152,7 +184,7 @@ app.post('/api/participants/upload-excel', upload.single('file'), async (req, re
           group: groupLabel,
           portfolio,
           participantId,
-          email: '',
+          email: `${participantId}@vector2026.com`,
           role: 'student',
           institution: clubName,
         });

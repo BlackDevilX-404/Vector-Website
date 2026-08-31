@@ -1,5 +1,5 @@
 /* ============================================================
-   INK LOADER — Ink drop & pen trace sequence
+   LOADER — Cinematic Logo Focus Sequence
    ============================================================ */
 
 .ink-loader {
@@ -19,8 +19,7 @@
   pointer-events: none;
 }
 
-/* ── INK DROP SPREAD ── */
-/* A massive dark circle that grows to cover the screen */
+/* ── BACKGROUND OVERLAY ── */
 .ink-drop-overlay {
   position: absolute;
   top: 50%;
@@ -33,8 +32,6 @@
   z-index: 1;
 }
 
-/* Optional: if the screen is already var(--ink), we can make the drop slightly darker temporarily, 
-   but since var(--ink) is the base, we will animate a "gold" flash into the ink drop. */
 .ink-loader::before {
   content: '';
   position: absolute;
@@ -43,14 +40,14 @@
   z-index: 0;
 }
 
-.phase-spreading .ink-drop-overlay,
-.phase-tracing .ink-drop-overlay,
+.phase-focus .ink-drop-overlay,
+.phase-glow .ink-drop-overlay,
 .phase-revealing .ink-drop-overlay {
   transform: translate(-50%, -50%) scale(30);
   transition: transform 1.2s cubic-bezier(0.65, 0, 0.15, 1);
 }
 
-/* ── CENTER STAGE (Pen & Text) ── */
+/* ── CENTER STAGE ── */
 .ink-center {
   position: relative;
   z-index: 2;
@@ -61,73 +58,39 @@
   width: 100%;
 }
 
-/* ── WORDMARK ── */
-.ink-wordmark {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 10vw, 7rem);
-  font-weight: 700;
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(197, 160, 89, 0.15); /* Gold outline outline */
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+/* ── LOGO FOCUS ANIMATION ── */
+.logo-wrap {
   position: relative;
   margin-bottom: 2rem;
-  opacity: 0;
-  transition: opacity 0.5s ease;
+  /* Glow transition */
+  transition: filter 1.5s ease;
 }
 
-.phase-tracing .ink-wordmark,
-.phase-revealing .ink-wordmark {
+.loader-logo {
+  height: 100px;
+  /* Start state: large, transparent, blurry */
+  filter: blur(20px);
+  transform: scale(2.5);
+  opacity: 0;
+  /* Cinematic snap to focus */
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1),
+              filter 1s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity 0.8s ease;
+}
+
+.phase-focus .loader-logo,
+.phase-glow .loader-logo,
+.phase-revealing .loader-logo {
+  /* Focused state */
+  filter: blur(0px);
+  transform: scale(1);
   opacity: 1;
 }
 
-/* The actual "ink filling" of the text */
-.ink-wordmark::before {
-  content: 'VECTOR';
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: var(--gold);
-  -webkit-text-stroke: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 0%;
-  border-right: 2px solid var(--gold-light);
-  /* Tracing animation */
-  transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
-  filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.4));
-}
-
-.phase-revealing .ink-wordmark::before {
-  width: 100%;
-  border-right-color: transparent; /* hide cursor when done */
-}
-
-/* ── FLOATING PEN NIB ── */
-.ink-pen-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: translate(0, -60px) rotate(-15deg);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.phase-tracing .ink-pen-wrap {
-  opacity: 1;
-  /* Animate the pen following the text reveal */
-  animation: trace-pen 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.phase-revealing .ink-pen-wrap {
-  opacity: 0;
-  transform: translate(100%, -60px) rotate(15deg); /* moves off slightly */
-}
-
-@keyframes trace-pen {
-  0% { left: 0%; transform: translate(-30px, -60px) rotate(-15deg); }
-  100% { left: 100%; transform: translate(10px, -60px) rotate(10deg); }
+/* Subtle Glow phase */
+.phase-glow .logo-wrap,
+.phase-revealing .logo-wrap {
+  filter: drop-shadow(0 0 25px rgba(197, 160, 89, 0.4));
 }
 
 /* ── SUBTITLE / TAGLINE ── */
@@ -137,9 +100,11 @@
   letter-spacing: 0.35em;
   color: rgba(197, 160, 89, 0); /* invisible initially */
   text-transform: uppercase;
-  transition: color 0.8s ease 0.5s;
+  transform: translateY(10px);
+  transition: color 1s ease, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .phase-revealing .ink-subtitle {
   color: rgba(197, 160, 89, 0.7);
+  transform: translateY(0);
 }

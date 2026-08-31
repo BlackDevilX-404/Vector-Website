@@ -56,7 +56,7 @@ const ExcelUpload = () => {
     <div className="upload-page">
       <h1 className="page-title">Upload Participants</h1>
       <p className="upload-subtitle">
-        Upload an Excel file with columns: <strong>S.No, Name, Club Name, Group, Portfolio</strong>.<br />
+        Upload an Excel file. The system will automatically detect columns for: <strong>S.No, Name, Club/Institution, Group, and Portfolio/Designation</strong>.<br />
         Participants already in the database (matched by name) will be preserved.
       </p>
 
@@ -134,11 +134,11 @@ const ExcelUpload = () => {
         <table className="format-table">
           <thead>
             <tr>
-              <th>S.No</th>
+              <th>S.No / ID</th>
               <th>Name</th>
-              <th>Club Name</th>
+              <th>Club / Institution</th>
               <th>Group</th>
-              <th>Portfolio</th>
+              <th>Portfolio / Designation</th>
             </tr>
           </thead>
           <tbody>

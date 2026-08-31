@@ -142,6 +142,40 @@ const Scanner = () => {
                 Start Camera Scanner
               </button>
 
+              <div className="scanner-divider"><span>or upload QR image</span></div>
+
+              <input
+                type="file"
+                accept="image/*"
+                id="qr-upload"
+                style={{ display: 'none' }}
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+                  setScanError('');
+                  try {
+                    const qr = new Html5Qrcode('qr-reader-hidden');
+                    const decodedText = await qr.scanFileV2(file);
+                    handleScanSuccess(decodedText.decodedText || decodedText);
+                  } catch (err) {
+                    try {
+                      const qr = new Html5Qrcode('qr-reader-hidden');
+                      const decodedText = await qr.scanFile(file, false);
+                      handleScanSuccess(decodedText);
+                    } catch (err2) {
+                      setScanError('Could not find a valid QR code in the image.');
+                    }
+                  }
+                  e.target.value = '';
+                }}
+              />
+              <button 
+                className="btn-upload-scan" 
+                onClick={() => document.getElementById('qr-upload').click()}
+              >
+                Upload QR Image
+              </button>
+
               <div className="scanner-divider"><span>or enter ID manually</span></div>
 
               <form className="manual-form" onSubmit={handleManualLookup}>
@@ -210,6 +244,9 @@ const Scanner = () => {
           </div>
         </div>
       )}
+      
+      {/* Hidden div for file scanning */}
+      <div id="qr-reader-hidden" style={{ display: 'none' }}></div>
     </div>
   );
 };

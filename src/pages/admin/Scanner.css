@@ -51,9 +51,9 @@
   margin: 0;
 }
 
-.btn-start-scan {
+.btn-start-scan,
+.btn-upload-scan {
   padding: 0.9rem 2.5rem;
-  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
   color: white;
   border: none;
   border-radius: 12px;
@@ -64,9 +64,22 @@
   letter-spacing: 0.02em;
 }
 
+.btn-start-scan {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+.btn-upload-scan {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
 .btn-start-scan:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(139, 92, 246, 0.45);
+}
+
+.btn-upload-scan:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45);
 }
 
 .scanner-divider {

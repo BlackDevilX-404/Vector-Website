@@ -24,19 +24,19 @@ const Attendance = () => {
     fetchParticipants();
   }, []);
 
-  const toggleAttendance = async (id, currentStatus) => {
+  const toggleAttendance = async (id, field, currentStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/participants/${id}/attendance`, {
+      const response = await fetch(`http://localhost:5000/api/participants/${id}/checkin`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ attended: !currentStatus })
+        body: JSON.stringify({ [field]: !currentStatus })
       });
       
       if (!response.ok) throw new Error('Failed to update');
       
       // Update local state
       setParticipants(participants.map(p => 
-        p._id === id ? { ...p, attended: !currentStatus } : p
+        p._id === id ? { ...p, [field]: !currentStatus } : p
       ));
     } catch (err) {
       alert('Failed to update attendance status');
@@ -73,37 +73,55 @@ const Attendance = () => {
               <th>Email</th>
               <th>Role</th>
               <th>Institution</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th>Morning Status</th>
+              <th>Afternoon Status</th>
+              <th>Morning Action</th>
+              <th>Afternoon Action</th>
             </tr>
           </thead>
           <tbody>
             {filteredParticipants.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-4">No participants found.</td>
+                <td colSpan="8" className="text-center py-4">No participants found.</td>
               </tr>
             ) : (
-              filteredParticipants.map(p => (
-                <tr key={p._id} className={p.attended ? 'row-attended' : ''}>
-                  <td className="font-medium">{p.name}</td>
-                  <td>{p.email}</td>
-                  <td className="capitalize">{p.role}</td>
-                  <td>{p.institution}</td>
-                  <td>
-                    <span className={`status-badge ${p.attended ? 'attended' : 'pending'}`}>
-                      {p.attended ? 'Attended' : 'Pending'}
-                    </span>
-                  </td>
-                  <td>
-                    <button 
-                      className={`btn-toggle ${p.attended ? 'btn-undo' : 'btn-mark'}`}
-                      onClick={() => toggleAttendance(p._id, p.attended)}
-                    >
-                      {p.attended ? 'Undo' : 'Mark Present'}
-                    </button>
-                  </td>
-                </tr>
-              ))
+              filteredParticipants.map(p => {
+                const isFullyAttended = p.morningAttendance && p.afternoonAttendance;
+                return (
+                  <tr key={p._id} className={isFullyAttended ? 'row-attended' : ''}>
+                    <td className="font-medium">{p.name}</td>
+                    <td>{p.email}</td>
+                    <td className="capitalize">{p.role}</td>
+                    <td>{p.institution}</td>
+                    <td>
+                      <span className={`status-badge ${p.morningAttendance ? 'attended' : 'pending'}`}>
+                        {p.morningAttendance ? 'Attended' : 'Pending'}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`status-badge ${p.afternoonAttendance ? 'attended' : 'pending'}`}>
+                        {p.afternoonAttendance ? 'Attended' : 'Pending'}
+                      </span>
+                    </td>
+                    <td>
+                      <button 
+                        className={`btn-toggle ${p.morningAttendance ? 'btn-undo' : 'btn-mark'}`}
+                        onClick={() => toggleAttendance(p._id, 'morningAttendance', p.morningAttendance)}
+                      >
+                        {p.morningAttendance ? 'Undo Morning' : 'Mark Morning'}
+                      </button>
+                    </td>
+                    <td>
+                      <button 
+                        className={`btn-toggle ${p.afternoonAttendance ? 'btn-undo' : 'btn-mark'}`}
+                        onClick={() => toggleAttendance(p._id, 'afternoonAttendance', p.afternoonAttendance)}
+                      >
+                        {p.afternoonAttendance ? 'Undo Afternoon' : 'Mark Afternoon'}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

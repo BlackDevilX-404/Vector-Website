@@ -1,5 +1,6 @@
 import { Outlet, NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { ReactLenis } from 'lenis/react';
 import Login from '../pages/admin/Login';
 import './AdminLayout.css';
 
@@ -91,9 +92,19 @@ const AdminLayout = () => {
           </button>
           <h2>VECTOR Event Management</h2>
         </header>
-        <div className="admin-page-container">
+        <ReactLenis 
+          className="admin-page-container" 
+          options={{ 
+            lerp: 0.025,
+            duration: 1.5,
+            wheelMultiplier: 1.1,
+            smoothWheel: true,
+            smoothTouch: true,
+            syncTouch: true
+          }}
+        >
           <Outlet />
-        </div>
+        </ReactLenis>
       </main>
     </div>
   );
