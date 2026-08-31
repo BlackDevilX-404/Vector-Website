@@ -11,6 +11,7 @@ const participantSchema = new mongoose.Schema({
 
   // New fields from Excel upload
   sNo: { type: Number },
+  riId: { type: String, default: '' },
   clubName: { type: String, default: '' },
   group: { type: String, enum: ['Group 1', 'Group 2', 'Group 3', 'Group 4'], default: 'Group 1' },
   portfolio: { type: String, default: '' },

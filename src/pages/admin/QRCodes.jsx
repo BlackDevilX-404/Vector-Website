@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import QRCode from 'qrcode';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { API_BASE_URL } from '../../config';
 import './QRCodes.css';
 
 const VECTOR_LOGO_TEXT = 'VECTOR';
@@ -81,6 +82,7 @@ const QRCard = ({ participant }) => {
       <div className="qr-info">
         <div className="qr-pid">{participant.participantId}</div>
         <div className="qr-name">{participant.name}</div>
+        {participant.riId && <div className="qr-riid">RI ID: {participant.riId}</div>}
         <div className="qr-meta">
           <span className="qr-badge club">{participant.clubName || '—'}</span>
           <span className="qr-badge group">{participant.group || '—'}</span>
@@ -105,7 +107,7 @@ const QRCodes = () => {
   const [downloadingAll, setDownloadingAll] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/participants')
+    fetch(`${API_BASE_URL}/api/participants`)
       .then(r => r.json())
       .then(data => {
         setParticipants(data.filter(p => p.participantId));

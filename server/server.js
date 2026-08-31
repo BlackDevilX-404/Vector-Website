@@ -5,8 +5,10 @@ const multer = require('multer');
 const XLSX = require('xlsx');
 const Participant = require('./models/Participant');
 
+const { MongoMemoryServer } = require('mongodb-memory-server');
+
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -14,10 +16,27 @@ app.use(express.json());
 // Multer setup (memory storage for Excel parsing)
 const upload = multer({ storage: multer.memoryStorage() });
 
-// MongoDB connection
-mongoose.connect('mongodb://127.0.0.1:27017/vector_event')
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Could not connect to MongoDB:', err));
+// MongoDB connection with automatic in-memory fallback
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/vector_event';
+
+async function connectDatabase() {
+  try {
+    await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 2500 });
+    console.log(`Connected to MongoDB at ${MONGO_URI}`);
+  } catch (err) {
+    console.warn(`Local MongoDB connection failed (${err.message}). Starting MongoMemoryServer...`);
+    try {
+      const mongod = await MongoMemoryServer.create();
+      const memUri = mongod.getUri();
+      await mongoose.connect(memUri);
+      console.log(`Connected to In-Memory MongoDB at ${memUri}`);
+    } catch (memErr) {
+      console.error('Failed to start In-Memory MongoDB:', memErr);
+    }
+  }
+}
+
+connectDatabase();
 
 // ─── Helper: generate Participant ID ────────────────────────────────────────
 // Format: V26G<groupNum><sequentialNum padded to 3 digits>
@@ -59,14 +78,36 @@ app.get('/api/participants', async (req, res) => {
   }
 });
 
-// GET participant by participantId (for QR scan lookup)
+// GET participant by participantId (for QR scan lookup) case-insensitive
 app.get('/api/participants/by-pid/:participantId', async (req, res) => {
   try {
-    const participant = await Participant.findOne({ participantId: req.params.participantId });
+    const pidRegex = new RegExp(`^${req.params.participantId.trim()}$`, 'i');
+    const participant = await Participant.findOne({ participantId: pidRegex });
     if (!participant) return res.status(404).json({ error: 'Participant not found' });
     res.json(participant);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch participant' });
+  }
+});
+
+// GET search participants (for public pass lookup & admin quick search)
+app.get('/api/participants/search', async (req, res) => {
+  try {
+    const q = (req.query.q || '').trim();
+    if (!q) return res.json([]);
+    const regex = new RegExp(q, 'i');
+    const results = await Participant.find({
+      $or: [
+        { name: regex },
+        { participantId: regex },
+        { riId: regex },
+        { email: regex },
+        { clubName: regex }
+      ]
+    }).limit(20);
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ error: 'Search failed' });
   }
 });
 
@@ -123,6 +164,7 @@ app.post('/api/participants/upload-excel', upload.single('file'), async (req, re
     for (const row of rows) {
       // Map columns (case-insensitive key match)
       const name = (row['Name'] || row['NAME'] || row['name'] || '').toString().trim();
+      const riId = (row['RI ID'] || row['RIID'] || row['Ri Id'] || row['ri id'] || row['RI_ID'] || row['riId'] || '').toString().trim();
       const clubName = (row['Club Name'] || row['CLUB NAME'] || row['club name'] || row['ClubName'] || '').toString().trim();
       const groupRaw = (row['Group'] || row['GROUP'] || row['group'] || '').toString().trim();
       const portfolio = (row['Portfolio'] || row['PORTFOLIO'] || row['portfolio'] || '').toString().trim();
@@ -147,6 +189,7 @@ app.post('/api/participants/upload-excel', upload.single('file'), async (req, re
       try {
         await Participant.create({
           sNo,
+          riId,
           name,
           clubName,
           group: groupLabel,
@@ -222,13 +265,48 @@ app.put('/api/participants/:id/attendance', async (req, res) => {
   }
 });
 
-// POST login
+// POST admin login
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   if (username === 'admin' && password === 'vector2026') {
     res.json({ token: 'admin-auth-token-xyz' });
   } else {
-    res.status(401).json({ error: 'Invalid credentials' });
+    res.status(401).json({ error: 'Invalid admin credentials' });
+  }
+});
+
+// POST user login (Username = RI ID or Participant ID, Password = "vector")
+app.post('/api/user-login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ error: 'RI ID and password are required' });
+    }
+
+    const cleanPass = password.trim().toLowerCase();
+    if (cleanPass !== 'vector' && cleanPass !== 'vector2026') {
+      return res.status(401).json({ error: 'Invalid password. Password for users is "vector"' });
+    }
+
+    const inputRegex = new RegExp(`^${username.trim()}$`, 'i');
+    const participant = await Participant.findOne({
+      $or: [
+        { riId: inputRegex },
+        { participantId: inputRegex },
+        { name: inputRegex }
+      ]
+    });
+
+    if (!participant) {
+      return res.status(404).json({ error: 'Participant not found. Please verify your RI ID.' });
+    }
+
+    res.json({
+      token: `user-token-${participant._id}`,
+      participant
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Login failed. Please try again.' });
   }
 });
 

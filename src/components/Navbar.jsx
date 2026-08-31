@@ -45,6 +45,7 @@ const Navbar = () => {
             <li><a href="#core-team">Core Team</a></li>
             <li><a href="#host-leaders">Host Leaders</a></li>
             <li><a href="#guidelines">Guidelines</a></li>
+            <li><a href="/login" className="nav-pass-btn">🔑 Participant Login</a></li>
           </ul>
 
           <button className={`hamburger ${menuOpen ? 'active' : ''}`} onClick={toggleMenu} aria-label="Toggle menu">
@@ -66,6 +67,7 @@ const Navbar = () => {
             <li><a href="#core-team" onClick={closeMenu}>Core Team</a></li>
             <li><a href="#host-leaders" onClick={closeMenu}>Host Leaders</a></li>
             <li><a href="#guidelines" onClick={closeMenu}>Guidelines</a></li>
+            <li><a href="/login" onClick={closeMenu} className="nav-pass-btn">🔑 Participant Login</a></li>
           </ul>
         </div>
       </div>

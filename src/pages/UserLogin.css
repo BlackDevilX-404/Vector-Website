@@ -1,0 +1,360 @@
+.user-login-page {
+  min-height: calc(100vh - 160px);
+  padding: 120px 24px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+  color: #f8fafc;
+}
+
+/* Login Card Form */
+.login-card-container {
+  max-width: 480px;
+  margin: 40px auto;
+  background: rgba(30, 41, 59, 0.75);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 24px;
+  padding: 40px 32px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(124, 58, 237, 0.2);
+}
+
+.login-card-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.brand-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.login-card-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.login-hint {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.login-hint code {
+  color: #a78bfa;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.user-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-login-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.form-field input {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: #ffffff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-field input:focus {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+}
+
+.btn-user-login {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-user-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+}
+
+/* User Dashboard */
+.user-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.user-dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcome-tag {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #c084fc;
+}
+
+.dash-name {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.btn-logout {
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-logout:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 850px) {
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Pass Card Box */
+.pass-card-box {
+  background: linear-gradient(145deg, #1e1b4b 0%, #0f172a 100%);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.pass-card-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.brand-logo {
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+.pass-group-badge {
+  background: #7c3aed;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 16px;
+}
+
+.pass-qr-frame {
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.pass-qr-img {
+  width: 220px;
+  height: 220px;
+  display: block;
+}
+
+.pass-details {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.pd-id {
+  font-family: monospace;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #c084fc;
+}
+
+.pd-riid {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin: 2px 0 6px;
+}
+
+.pd-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+
+.pd-meta-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+
+.pd-meta-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.pdm-label {
+  color: #94a3b8;
+}
+
+.pdm-val {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.btn-download-qr-pass {
+  width: 100%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.btn-download-qr-pass:hover {
+  transform: scale(1.02);
+}
+
+/* Status Overview Box */
+.status-overview-box {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(12px);
+}
+
+.status-overview-box h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.status-desc {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.status-card {
+  padding: 16px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: rgba(15, 23, 42, 0.6);
+  transition: all 0.2s ease;
+}
+
+.status-card.done {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+}
+
+.sc-icon {
+  font-size: 1.8rem;
+}
+
+.sc-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sc-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.sc-state {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.status-card.done .sc-state {
+  color: #34d399;
+  font-weight: 700;
+}

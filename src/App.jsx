@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import PublicSite from './pages/PublicSite';
+import ParticipantPass from './pages/ParticipantPass';
+import UserLogin from './pages/UserLogin';
 import AdminLayout from './layouts/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import Attendance from './pages/admin/Attendance';
@@ -13,6 +15,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<PublicSite />} />
+        <Route path="/pass" element={<ParticipantPass />} />
+        <Route path="/login" element={<UserLogin />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../config';
 import './Dashboard.css';
 
 const METRICS = [
@@ -32,8 +33,8 @@ const Dashboard = () => {
     const fetchAll = async () => {
       try {
         const [statsRes, partRes] = await Promise.all([
-          fetch('http://localhost:5000/api/participants/stats'),
-          fetch('http://localhost:5000/api/participants'),
+          fetch(`${API_BASE_URL}/api/participants/stats`),
+          fetch(`${API_BASE_URL}/api/participants`),
         ]);
         if (!statsRes.ok || !partRes.ok) throw new Error('Failed to fetch data');
         const [statsData, partData] = await Promise.all([statsRes.json(), partRes.json()]);

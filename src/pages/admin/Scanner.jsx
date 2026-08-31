@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
+import { API_BASE_URL } from '../../config';
 import './Scanner.css';
 
 const CHECKIN_FIELDS = [
@@ -10,6 +11,22 @@ const CHECKIN_FIELDS = [
   { key: 'lunch',                label: 'Lunch',                 icon: '🍽️' },
   { key: 'kitReceived',          label: 'Kit Received',          icon: '🎒' },
 ];
+
+function playBeepSound() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.2);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.2);
+  } catch (_) {}
+}
 
 const Scanner = () => {
   const [scanning, setScanning] = useState(false);
@@ -36,30 +53,37 @@ const Scanner = () => {
   const lookupParticipant = async (pid) => {
     setScanError('');
     try {
-      const res = await fetch(`http://localhost:5000/api/participants/by-pid/${encodeURIComponent(pid)}`);
+      const res = await fetch(`${API_BASE_URL}/api/participants/by-pid/${encodeURIComponent(pid)}`);
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || 'Participant not found');
       }
       const data = await res.json();
       setParticipant(data);
-      // Pre-fill checkboxes with current state
+      // Pre-fill checkboxes with current database state
       const state = {};
       CHECKIN_FIELDS.forEach(f => { state[f.key] = data[f.key] || false; });
       setCheckins(state);
+      playBeepSound();
     } catch (err) {
       setScanError(err.message);
       setParticipant(null);
     }
   };
 
-  const handleScanSuccess = async (decoded) => {
+  const handleScanSuccess = async (decodedText) => {
     await stopScanner();
-    let pid = decoded;
+    let pid = decodedText.trim();
+    // Parse JSON payload or URL if QR contains complex data
     try {
-      const obj = JSON.parse(decoded);
+      const obj = JSON.parse(decodedText);
       if (obj.pid) pid = obj.pid;
-    } catch (_) {}
+    } catch (_) {
+      if (decodedText.includes('id=')) {
+        const match = decodedText.match(/id=([a-zA-Z0-9]+)/);
+        if (match) pid = match[1];
+      }
+    }
     await lookupParticipant(pid);
   };
 
@@ -68,7 +92,6 @@ const Scanner = () => {
     setScanError('');
     setScanning(true);
 
-    // Small delay to let DOM render the scanner div
     setTimeout(async () => {
       try {
         const qr = new Html5Qrcode('qr-reader');
@@ -80,7 +103,7 @@ const Scanner = () => {
           () => {}
         );
       } catch (err) {
-        setScanError('Camera access denied or unavailable.');
+        setScanError('Camera access denied or unavailable on this device.');
         setScanning(false);
       }
     }, 100);
@@ -90,24 +113,37 @@ const Scanner = () => {
     return () => { stopScanner(); };
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = async (andNext = false) => {
     if (!participant) return;
     setSaving(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/participants/${participant._id}/checkin`, {
+      const res = await fetch(`${API_BASE_URL}/api/participants/${participant._id}/checkin`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(checkins),
       });
-      if (!res.ok) throw new Error('Failed to save');
-      setToast('✅ Check-in saved successfully!');
+      if (!res.ok) throw new Error('Failed to save check-in');
+      setToast(`✅ Check-in saved for ${participant.name}!`);
       setTimeout(() => setToast(''), 3000);
+
+      if (andNext) {
+        setParticipant(null);
+        setCheckins({});
+        setManualId('');
+        startScanner();
+      }
     } catch (err) {
-      setToast('❌ Failed to save. Try again.');
+      setToast('❌ Failed to save. Please try again.');
       setTimeout(() => setToast(''), 3000);
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleMarkAll = (status = true) => {
+    const updated = {};
+    CHECKIN_FIELDS.forEach(f => { updated[f.key] = status; });
+    setCheckins(updated);
   };
 
   const handleReset = async () => {
@@ -126,60 +162,74 @@ const Scanner = () => {
 
   return (
     <div className="scanner-page">
-      <h1 className="page-title">QR Scanner</h1>
+      <h1 className="page-title">QR Scanner & Check-in Desk</h1>
 
       {toast && <div className="scanner-toast">{toast}</div>}
 
       {!participant && (
-        <>
+        <div className="scanner-container">
           {!scanning ? (
             <div className="scanner-start">
               <div className="scanner-icon">📷</div>
+              <h2>Scan Participant Pass</h2>
               <p className="scanner-desc">
-                Point the camera at a participant's QR code to load their details and mark check-in items.
+                Point the device camera at any participant's QR code pass to instantly load their profile and manage check-ins.
               </p>
               <button className="btn-start-scan" onClick={startScanner}>
-                Start Camera Scanner
+                📷 Launch Camera Scanner
               </button>
 
-              <div className="scanner-divider"><span>or enter ID manually</span></div>
+              <div className="scanner-divider"><span>OR ENTER PARTICIPANT ID MANUALLY</span></div>
 
               <form className="manual-form" onSubmit={handleManualLookup}>
                 <input
                   type="text"
                   className="manual-input"
-                  placeholder="e.g. V26G1001"
+                  placeholder="Enter ID e.g. V26G1001…"
                   value={manualId}
                   onChange={e => setManualId(e.target.value)}
                 />
-                <button type="submit" className="btn-manual-lookup">Lookup</button>
+                <button type="submit" className="btn-manual-lookup">Lookup ID</button>
               </form>
             </div>
           ) : (
             <div className="scanner-active">
               <div id="qr-reader" className="qr-reader-box" ref={scannerRef}></div>
-              <button className="btn-stop-scan" onClick={stopScanner}>✕ Stop Scanner</button>
+              <button className="btn-stop-scan" onClick={stopScanner}>✕ Stop Camera</button>
             </div>
           )}
 
           {scanError && (
             <div className="scan-error">⚠️ {scanError}</div>
           )}
-        </>
+        </div>
       )}
 
       {participant && (
         <div className="checkin-panel">
           <div className="participant-card">
-            <div className="pc-pid">{participant.participantId}</div>
-            <div className="pc-name">{participant.name}</div>
-            <div className="pc-meta">
-              <span className="pc-badge club">{participant.clubName || '—'}</span>
-              <span className="pc-badge group">{participant.group || '—'}</span>
+            <div className="pc-header">
+              <span className="pc-pid">{participant.participantId}</span>
+              <span className="pc-badge group">{participant.group || 'Group 1'}</span>
             </div>
-            {participant.portfolio && (
-              <div className="pc-portfolio">{participant.portfolio}</div>
-            )}
+            <h2 className="pc-name">{participant.name}</h2>
+            <div className="pc-meta">
+              {participant.riId && <span className="pc-badge riid">🆔 RI: {participant.riId}</span>}
+              <span className="pc-badge club">🏛️ {participant.clubName || participant.institution || 'Participant'}</span>
+              {participant.portfolio && <span className="pc-badge portfolio">💼 {participant.portfolio}</span>}
+            </div>
+          </div>
+
+          <div className="checkin-controls-header">
+            <h3>Mark Items for {participant.name}</h3>
+            <div className="quick-toggle-btns">
+              <button type="button" className="btn-quick-select" onClick={() => handleMarkAll(true)}>
+                ✓ Select All
+              </button>
+              <button type="button" className="btn-quick-clear" onClick={() => handleMarkAll(false)}>
+                ✕ Clear All
+              </button>
+            </div>
           </div>
 
           <div className="checkin-grid">
@@ -194,18 +244,28 @@ const Scanner = () => {
                   onChange={e => setCheckins(prev => ({ ...prev, [field.key]: e.target.checked }))}
                 />
                 <span className="checkin-icon">{field.icon}</span>
-                <span className="checkin-label">{field.label}</span>
-                <span className="checkin-status">{checkins[field.key] ? '✓' : ''}</span>
+                <div className="checkin-text">
+                  <span className="checkin-label">{field.label}</span>
+                  <span className="checkin-state-tag">
+                    {checkins[field.key] ? 'Checked In' : 'Not Issued'}
+                  </span>
+                </div>
+                <span className="checkin-checkbox-indicator">
+                  {checkins[field.key] ? '✓' : ''}
+                </span>
               </label>
             ))}
           </div>
 
           <div className="checkin-actions">
-            <button className="btn-save" onClick={handleSave} disabled={saving}>
-              {saving ? 'Saving…' : '💾 Save Check-in'}
+            <button className="btn-save" onClick={() => handleSave(false)} disabled={saving}>
+              {saving ? 'Saving…' : '💾 Save Changes'}
+            </button>
+            <button className="btn-save-next" onClick={() => handleSave(true)} disabled={saving}>
+              📷 Save & Scan Next
             </button>
             <button className="btn-scan-next" onClick={handleReset}>
-              📷 Scan Next
+              🔄 Reset / Search
             </button>
           </div>
         </div>

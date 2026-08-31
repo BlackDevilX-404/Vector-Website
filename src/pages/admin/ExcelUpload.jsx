@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { API_BASE_URL } from '../../config';
 import './ExcelUpload.css';
 
 const ExcelUpload = () => {
@@ -37,7 +38,7 @@ const ExcelUpload = () => {
     formData.append('file', file);
 
     try {
-      const res = await fetch('http://localhost:5000/api/participants/upload-excel', {
+      const res = await fetch(`${API_BASE_URL}/api/participants/upload-excel`, {
         method: 'POST',
         body: formData,
       });
@@ -56,7 +57,7 @@ const ExcelUpload = () => {
     <div className="upload-page">
       <h1 className="page-title">Upload Participants</h1>
       <p className="upload-subtitle">
-        Upload an Excel file with columns: <strong>S.No, Name, Club Name, Group, Portfolio</strong>.<br />
+        Upload an Excel file with columns: <strong>S.No, Name, RI ID, Club Name, Group, Portfolio</strong>.<br />
         Participants already in the database (matched by name) will be preserved.
       </p>
 
@@ -136,6 +137,7 @@ const ExcelUpload = () => {
             <tr>
               <th>S.No</th>
               <th>Name</th>
+              <th>RI ID</th>
               <th>Club Name</th>
               <th>Group</th>
               <th>Portfolio</th>
@@ -145,6 +147,7 @@ const ExcelUpload = () => {
             <tr>
               <td>1</td>
               <td>Arjun Sharma</td>
+              <td>RI10245</td>
               <td>Tech Club</td>
               <td>Group 1</td>
               <td>Design Lead</td>
@@ -152,6 +155,7 @@ const ExcelUpload = () => {
             <tr>
               <td>2</td>
               <td>Priya Nair</td>
+              <td>RI10246</td>
               <td>Robotics Club</td>
               <td>Group 3</td>
               <td>Developer</td>

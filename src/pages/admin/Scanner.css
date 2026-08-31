@@ -1,82 +1,77 @@
 .scanner-page {
-  max-width: 680px;
+  padding: 30px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0 1rem 3rem;
-  position: relative;
+  color: #f8fafc;
 }
 
 .scanner-toast {
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  background: rgba(30, 27, 75, 0.95);
-  border: 1px solid rgba(139, 92, 246, 0.5);
-  color: #e2e8f0;
-  padding: 0.8rem 1.4rem;
+  background: #10b981;
+  color: #ffffff;
+  padding: 14px 20px;
   border-radius: 12px;
   font-weight: 600;
-  z-index: 999;
-  backdrop-filter: blur(12px);
-  animation: slideIn 0.3s ease;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  margin-bottom: 24px;
+  animation: fadeIn 0.3s ease;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Start screen ── */
-.scanner-start {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-  padding: 3rem 2rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.scanner-container {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 20px;
-  margin-top: 1.5rem;
+  padding: 40px 30px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .scanner-icon {
-  font-size: 4rem;
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+}
+
+.scanner-start h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 10px;
 }
 
 .scanner-desc {
   color: #94a3b8;
-  text-align: center;
-  max-width: 380px;
-  line-height: 1.6;
-  margin: 0;
+  font-size: 0.95rem;
+  max-width: 480px;
+  margin: 0 auto 28px;
 }
 
 .btn-start-scan {
-  padding: 0.9rem 2.5rem;
-  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: #ffffff;
+  font-size: 1.1rem;
   font-weight: 700;
+  padding: 16px 36px;
+  border-radius: 14px;
+  border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
 }
 
 .btn-start-scan:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.45);
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.5);
 }
 
 .scanner-divider {
-  width: 100%;
+  margin: 32px 0 24px;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  color: #475569;
+  text-align: center;
+  color: #64748b;
   font-size: 0.8rem;
-  text-transform: uppercase;
+  font-weight: 700;
   letter-spacing: 0.08em;
 }
 
@@ -84,265 +79,302 @@
 .scanner-divider::after {
   content: '';
   flex: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.scanner-divider span {
+  padding: 0 16px;
 }
 
 .manual-form {
   display: flex;
-  gap: 0.5rem;
-  width: 100%;
-  max-width: 340px;
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto;
 }
 
 .manual-input {
   flex: 1;
-  padding: 0.65rem 1rem;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.3);
   border-radius: 10px;
-  border: 1px solid rgba(139, 92, 246, 0.35);
-  background: rgba(255, 255, 255, 0.05);
-  color: #e2e8f0;
-  font-size: 0.95rem;
-  font-family: 'Courier New', monospace;
+  padding: 12px 16px;
+  color: #ffffff;
+  font-size: 1rem;
   outline: none;
-  text-transform: uppercase;
+  font-family: monospace;
+  letter-spacing: 0.05em;
 }
 
 .manual-input:focus {
-  border-color: #8b5cf6;
+  border-color: #a78bfa;
 }
 
 .btn-manual-lookup {
-  padding: 0.65rem 1.2rem;
-  background: rgba(139, 92, 246, 0.2);
-  color: #a78bfa;
-  border: 1px solid rgba(139, 92, 246, 0.4);
-  border-radius: 10px;
-  font-size: 0.875rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
   font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
+  transition: background 0.2s ease;
 }
 
 .btn-manual-lookup:hover {
-  background: rgba(139, 92, 246, 0.35);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/* ── Active Scanner ── */
 .scanner-active {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 20px;
 }
 
 .qr-reader-box {
   width: 100%;
-  max-width: 500px;
+  max-width: 360px;
   border-radius: 16px;
   overflow: hidden;
-  border: 2px solid rgba(139, 92, 246, 0.5);
+  border: 2px solid #8b5cf6;
 }
 
 .btn-stop-scan {
-  padding: 0.6rem 1.4rem;
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #f87171;
-  border-radius: 10px;
+  background: #ef4444;
+  color: #ffffff;
   font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 10px;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-stop-scan:hover {
-  background: rgba(239, 68, 68, 0.25);
 }
 
 .scan-error {
-  margin-top: 1rem;
+  margin-top: 20px;
+  color: #f87171;
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #f87171;
-  padding: 0.75rem 1rem;
+  padding: 12px 20px;
   border-radius: 10px;
-  text-align: center;
 }
 
-/* ── Participant card ── */
+/* Checkin Panel */
 .checkin-panel {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 20px;
+  padding: 30px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
 
 .participant-card {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(109, 40, 217, 0.06));
-  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(30, 27, 75, 0.4) 100%);
+  border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 16px;
-  padding: 1.5rem;
-  text-align: center;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+
+.pc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
 }
 
 .pc-pid {
-  font-family: 'Courier New', monospace;
-  font-size: 0.85rem;
-  color: #a78bfa;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.4rem;
+  font-family: monospace;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #c084fc;
+  letter-spacing: 0.05em;
 }
 
 .pc-name {
-  font-size: 1.4rem;
+  font-size: 1.75rem;
   font-weight: 800;
-  color: #f1f5f9;
-  margin-bottom: 0.75rem;
+  color: #ffffff;
+  margin-bottom: 10px;
 }
 
 .pc-meta {
   display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-bottom: 0.5rem;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .pc-badge {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.25rem 0.7rem;
+  padding: 4px 12px;
   border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.pc-badge.club {
-  background: rgba(139, 92, 246, 0.2);
-  color: #a78bfa;
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
 }
 
 .pc-badge.group {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.25);
+  background: #7c3aed;
+  color: #ffffff;
 }
 
-.pc-portfolio {
-  font-size: 0.8rem;
-  color: #94a3b8;
+.checkin-controls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-/* ── Checkin grid ── */
+.checkin-controls-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.quick-toggle-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-quick-select,
+.btn-quick-clear {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-quick-select:hover {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border-color: #10b981;
+}
+
+.btn-quick-clear:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border-color: #ef4444;
+}
+
 .checkin-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
 }
 
 .checkin-item {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 14px;
+  padding: 16px;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  gap: 14px;
   cursor: pointer;
-  transition: all 0.25s ease;
-  user-select: none;
+  transition: all 0.2s ease;
   position: relative;
+  user-select: none;
 }
 
 .checkin-item input[type="checkbox"] {
   display: none;
 }
 
-.checkin-item:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  background: rgba(139, 92, 246, 0.07);
-}
-
 .checkin-item.checked {
-  background: rgba(34, 197, 94, 0.1);
-  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);
 }
 
 .checkin-icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
+  font-size: 1.6rem;
+}
+
+.checkin-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .checkin-label {
-  font-size: 0.85rem;
   font-weight: 600;
-  color: #cbd5e1;
-  flex: 1;
+  font-size: 0.95rem;
+  color: #f8fafc;
 }
 
-.checkin-item.checked .checkin-label {
-  color: #4ade80;
+.checkin-state-tag {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 2px;
 }
 
-.checkin-status {
-  font-size: 1rem;
-  color: #4ade80;
-  font-weight: 700;
-  width: 1rem;
-  text-align: center;
+.checkin-item.checked .checkin-state-tag {
+  color: #34d399;
+  font-weight: 600;
 }
 
-/* ── Actions ── */
+.checkin-checkbox-indicator {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(148, 163, 184, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.checkin-item.checked .checkin-checkbox-indicator {
+  background: #10b981;
+  border-color: #10b981;
+}
+
 .checkin-actions {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 0.75rem;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .btn-save {
-  padding: 1rem;
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
   font-weight: 700;
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: 1rem;
+  flex: 1;
 }
 
-.btn-save:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
-}
-
-.btn-save:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.btn-save-next {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: #ffffff;
+  font-weight: 700;
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  flex: 1;
 }
 
 .btn-scan-next {
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #94a3b8;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-scan-next:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #e2e8f0;
-}
-
-@media (max-width: 480px) {
-  .checkin-grid { grid-template-columns: 1fr; }
-  .checkin-actions { grid-template-columns: 1fr; }
+  color: #cbd5e1;
+  font-weight: 600;
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
 }
