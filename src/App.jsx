@@ -9,6 +9,8 @@ import QRCodes from './pages/admin/QRCodes';
 import Scanner from './pages/admin/Scanner';
 import LearningMaterialsAdmin from './pages/admin/LearningMaterialsAdmin';
 
+import AdminUsers from './pages/admin/AdminUsers';
+
 function App() {
   return (
     <BrowserRouter>
@@ -23,6 +25,7 @@ function App() {
           <Route path="qrcodes" element={<QRCodes />} />
           <Route path="scanner" element={<Scanner />} />
           <Route path="materials" element={<LearningMaterialsAdmin />} />
+          <Route path="users" element={<AdminUsers />} />
         </Route>
       </Routes>
     </BrowserRouter>

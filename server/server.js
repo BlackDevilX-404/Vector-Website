@@ -5,6 +5,7 @@ const multer = require('multer');
 const XLSX = require('xlsx');
 const Participant = require('./models/Participant');
 const Material    = require('./models/Material');
+const AdminUser   = require('./models/AdminUser');
 
 const path = require('path');
 
@@ -290,25 +291,92 @@ app.put('/api/participants/:id/attendance', async (req, res) => {
   }
 });
 
-// 8 Admin Accounts for multi-device login (without 'admin' in ID)
-const ADMIN_ACCOUNTS = {
-  vector1: 'vector2026_one',
-  vector2: 'vector2026_two',
-  vector3: 'vector2026_three',
-  vector4: 'vector2026_four',
-  vector5: 'vector2026_five',
-  vector6: 'vector2026_six',
-  vector7: 'vector2026_seven',
-  vector8: 'vector2026_eight'
-};
+// ─── Admin Users Management ──────────────────────────────────────────────────
+
+// Seed admins if empty
+async function seedAdmins() {
+  const count = await AdminUser.countDocuments();
+  if (count === 0) {
+    const defaultAdmins = [];
+    for (let i = 1; i <= 8; i++) {
+      let suffix = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'][i-1];
+      defaultAdmins.push({ username: `vector${i}`, password: `vector2026_${suffix}` });
+    }
+    await AdminUser.insertMany(defaultAdmins);
+    console.log('Seeded default admin users');
+  }
+}
 
 // POST login
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
-  if (ADMIN_ACCOUNTS[username] && ADMIN_ACCOUNTS[username] === password) {
-    res.json({ token: `admin-auth-token-${username}` });
-  } else {
-    res.status(401).json({ error: 'Invalid credentials' });
+app.post('/api/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const admin = await AdminUser.findOne({ username, password });
+    if (admin) {
+      res.json({ token: `admin-auth-token-${admin._id}`, username: admin.username });
+    } else {
+      res.status(401).json({ error: 'Invalid credentials' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Server error during login' });
+  }
+});
+
+// GET all admins
+app.get('/api/admins', async (req, res) => {
+  try {
+    const admins = await AdminUser.find({}, '-__v').sort({ createdAt: 1 });
+    res.json(admins);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch admins' });
+  }
+});
+
+// POST new admin
+app.post('/api/admins', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+    
+    const existing = await AdminUser.findOne({ username });
+    if (existing) return res.status(400).json({ error: 'Username already exists' });
+    
+    const newAdmin = new AdminUser({ username, password });
+    await newAdmin.save();
+    res.status(201).json(newAdmin);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create admin' });
+  }
+});
+
+// PUT update admin password/username
+app.put('/api/admins/:id', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const update = {};
+    if (username) update.username = username;
+    if (password) update.password = password;
+    
+    const admin = await AdminUser.findByIdAndUpdate(req.params.id, update, { new: true });
+    if (!admin) return res.status(404).json({ error: 'Admin not found' });
+    res.json(admin);
+  } catch (err) {
+    if (err.code === 11000) return res.status(400).json({ error: 'Username already exists' });
+    res.status(500).json({ error: 'Failed to update admin' });
+  }
+});
+
+// DELETE admin
+app.delete('/api/admins/:id', async (req, res) => {
+  try {
+    const count = await AdminUser.countDocuments();
+    if (count <= 1) return res.status(400).json({ error: 'Cannot delete the last admin account' });
+    
+    const deleted = await AdminUser.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ error: 'Admin not found' });
+    res.json({ message: 'Deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete admin' });
   }
 });
 
@@ -378,7 +446,8 @@ async function seedMaterials() {
 // Also seeds on first request if collection is empty (belt + suspenders)
 app.get('/api/materials', async (req, res) => {
   try {
-    await seedMaterials();           // no-op if already seeded
+    await seedMaterials();
+  await seedAdmins();           // no-op if already seeded
     const materials = await Material.find().sort({ num: 1 });
     res.json(materials);
   } catch (err) {
@@ -418,7 +487,7 @@ app.patch('/api/materials/:id/url', async (req, res) => {
   }
 });
 // Handle React routing, return all requests to React app
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 

@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { to: '/admin/scanner',   label: 'QR Scanner',           icon: '📷' },
   { to: '/admin/attendance',label: 'Attendance',            icon: '✅' },
   { to: '/admin/materials', label: 'Learning Materials',   icon: '📚' },
+  { to: '/admin/users',     label: 'Admin Accounts',       icon: '🔑' },
 ];
 
 const AdminLayout = () => {
