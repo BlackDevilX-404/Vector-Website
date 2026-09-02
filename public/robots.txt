@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vector-website.onrender.com/sitemap.xml
+
