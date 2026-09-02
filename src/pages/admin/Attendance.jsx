@@ -9,7 +9,7 @@ const Attendance = () => {
 
   const fetchParticipants = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/participants');
+      const response = await fetch('/api/participants');
       if (!response.ok) throw new Error('Failed to fetch data');
       const data = await response.json();
       setParticipants(data);
@@ -26,7 +26,7 @@ const Attendance = () => {
 
   const toggleAttendance = async (id, field, currentStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/participants/${id}/checkin`, {
+      const response = await fetch(`/api/participants/${id}/checkin`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ [field]: !currentStatus })

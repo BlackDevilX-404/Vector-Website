@@ -10,6 +10,7 @@ import LearningMaterials from '../components/LearningMaterials'
 import Guidelines from '../components/Guidelines'
 import CoreTeam from '../components/CoreTeam'
 import HostLeaders from '../components/HostLeaders'
+import Sponsors from '../components/Sponsors'
 import InkLoader from '../components/InkLoader'
 import useScrollReveal from '../hooks/useScrollReveal'
 
@@ -22,6 +23,7 @@ const PublicSite = () => {
       <main>
         <Hero />
         <About />
+        <Sponsors />
         <EventData />
         <Schedule />
         <LearningMaterials />

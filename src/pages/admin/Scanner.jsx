@@ -6,7 +6,7 @@ const CHECKIN_FIELDS = [
   { key: 'morningAttendance',    label: 'Morning Attendance',    icon: '🌅' },
   { key: 'afternoonAttendance',  label: 'Afternoon Attendance',  icon: '☀️' },
   { key: 'morningRefreshments',  label: 'Morning Refreshments',  icon: '☕' },
-  { key: 'afternoonRefreshments',label: 'Afternoon Refreshments',icon: '🧃' },
+  { key: 'eveningRefreshments',  label: 'Evening Refreshments',  icon: '🧃' },
   { key: 'lunch',                label: 'Lunch',                 icon: '🍽️' },
   { key: 'kitReceived',          label: 'Kit Received',          icon: '🎒' },
 ];
@@ -36,7 +36,7 @@ const Scanner = () => {
   const lookupParticipant = async (pid) => {
     setScanError('');
     try {
-      const res = await fetch(`http://localhost:5000/api/participants/by-pid/${encodeURIComponent(pid)}`);
+      const res = await fetch(`/api/participants/by-pid/${encodeURIComponent(pid)}`);
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || 'Participant not found');
@@ -52,6 +52,34 @@ const Scanner = () => {
       setParticipant(null);
     }
   };
+
+  // Poll for updates on the currently viewed participant
+  useEffect(() => {
+    if (!participant) return;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/participants/by-pid/${encodeURIComponent(participant.participantId)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        // Update local state without flickering the whole participant object
+        setCheckins(prev => {
+          const nextState = { ...prev };
+          let changed = false;
+          CHECKIN_FIELDS.forEach(f => {
+            if (nextState[f.key] !== !!data[f.key]) {
+              nextState[f.key] = !!data[f.key];
+              changed = true;
+            }
+          });
+          return changed ? nextState : prev;
+        });
+      } catch (e) {
+        // silently ignore polling errors
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [participant]);
 
   const handleScanSuccess = async (decoded) => {
     await stopScanner();
@@ -86,27 +114,32 @@ const Scanner = () => {
     }, 100);
   };
 
+  const [allParticipants, setAllParticipants] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+
   useEffect(() => {
+    fetch('/api/participants')
+      .then(res => res.json())
+      .then(data => setAllParticipants(data))
+      .catch(console.error);
     return () => { stopScanner(); };
   }, []);
 
-  const handleSave = async () => {
-    if (!participant) return;
-    setSaving(true);
+  const handleToggle = async (fieldKey, newValue) => {
+    // Optimistic UI update
+    setCheckins(prev => ({ ...prev, [fieldKey]: newValue }));
     try {
-      const res = await fetch(`http://localhost:5000/api/participants/${participant._id}/checkin`, {
+      const res = await fetch(`/api/participants/${participant._id}/checkin`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(checkins),
+        body: JSON.stringify({ [fieldKey]: newValue }), // Atomic update: only send the delta
       });
-      if (!res.ok) throw new Error('Failed to save');
-      setToast('✅ Check-in saved successfully!');
-      setTimeout(() => setToast(''), 3000);
+      if (!res.ok) throw new Error('Failed to update');
     } catch (err) {
-      setToast('❌ Failed to save. Try again.');
+      // Revert on failure
+      setCheckins(prev => ({ ...prev, [fieldKey]: !newValue }));
+      setToast(`❌ Failed to update ${fieldKey}`);
       setTimeout(() => setToast(''), 3000);
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -121,8 +154,36 @@ const Scanner = () => {
   const handleManualLookup = async (e) => {
     e.preventDefault();
     if (!manualId.trim()) return;
-    await lookupParticipant(manualId.trim().toUpperCase());
+    const query = manualId.trim().toLowerCase();
+    
+    // First try exact ID match
+    let match = allParticipants.find(p => p.participantId.toLowerCase() === query);
+    
+    // Then try exact name match
+    if (!match) {
+      const nameMatches = allParticipants.filter(p => p.name.toLowerCase().includes(query));
+      if (nameMatches.length === 1) match = nameMatches[0];
+      else if (nameMatches.length > 1) {
+        setScanError('Multiple participants found. Please select from the dropdown.');
+        setShowDropdown(true);
+        return;
+      }
+    }
+
+    if (match) {
+      await lookupParticipant(match.participantId);
+      setShowDropdown(false);
+    } else {
+      // Fallback to API if not in local state
+      await lookupParticipant(manualId.trim().toUpperCase());
+    }
   };
+
+  const filteredParticipants = allParticipants.filter(p => {
+    if (!manualId.trim()) return false;
+    const q = manualId.toLowerCase();
+    return p.name.toLowerCase().includes(q) || p.participantId.toLowerCase().includes(q) || (p.riId && String(p.riId).includes(q));
+  }).slice(0, 5); // Limit dropdown to 5 results
 
   return (
     <div className="scanner-page">
@@ -176,18 +237,47 @@ const Scanner = () => {
                 Upload QR Image
               </button>
 
-              <div className="scanner-divider"><span>or enter ID manually</span></div>
+              <div className="scanner-divider"><span>or enter ID/name manually</span></div>
 
-              <form className="manual-form" onSubmit={handleManualLookup}>
-                <input
-                  type="text"
-                  className="manual-input"
-                  placeholder="e.g. V26G1001"
-                  value={manualId}
-                  onChange={e => setManualId(e.target.value)}
-                />
-                <button type="submit" className="btn-manual-lookup">Lookup</button>
-              </form>
+              <div className="manual-lookup-container">
+                <form className="manual-form" onSubmit={handleManualLookup}>
+                  <input
+                    type="text"
+                    className="manual-input"
+                    placeholder="e.g. V26G1001 or Arjun"
+                    value={manualId}
+                    onChange={e => {
+                      setManualId(e.target.value);
+                      setShowDropdown(true);
+                    }}
+                    onFocus={() => setShowDropdown(true)}
+                  />
+                  <button type="submit" className="btn-manual-lookup">Lookup</button>
+                </form>
+                {showDropdown && manualId.trim() && (
+                  <div className="autocomplete-dropdown">
+                    {filteredParticipants.length > 0 ? (
+                      filteredParticipants.map(p => (
+                        <div 
+                          key={p._id} 
+                          className="autocomplete-item"
+                          onClick={() => {
+                            setManualId(p.participantId);
+                            setShowDropdown(false);
+                            lookupParticipant(p.participantId);
+                          }}
+                        >
+                          <div className="auto-pid">{p.participantId}</div>
+                          <div className="auto-name">{p.name}</div>
+                          <div className="auto-club">{p.clubName || p.institution}</div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="autocomplete-empty">No matches found</div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             <div className="scanner-active">
@@ -225,7 +315,7 @@ const Scanner = () => {
                 <input
                   type="checkbox"
                   checked={!!checkins[field.key]}
-                  onChange={e => setCheckins(prev => ({ ...prev, [field.key]: e.target.checked }))}
+                  onChange={e => handleToggle(field.key, e.target.checked)}
                 />
                 <span className="checkin-icon">{field.icon}</span>
                 <span className="checkin-label">{field.label}</span>
@@ -235,10 +325,7 @@ const Scanner = () => {
           </div>
 
           <div className="checkin-actions">
-            <button className="btn-save" onClick={handleSave} disabled={saving}>
-              {saving ? 'Saving…' : '💾 Save Check-in'}
-            </button>
-            <button className="btn-scan-next" onClick={handleReset}>
+            <button className="btn-scan-next" onClick={handleReset} style={{ flex: 1 }}>
               📷 Scan Next
             </button>
           </div>

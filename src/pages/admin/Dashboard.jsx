@@ -5,7 +5,7 @@ const METRICS = [
   { key: 'morningAttendance',    label: 'Morning Attendance',    icon: '🌅', color: 'blue' },
   { key: 'afternoonAttendance',  label: 'Afternoon Attendance',  icon: '☀️', color: 'amber' },
   { key: 'morningRefreshments',  label: 'Morning Refreshments',  icon: '☕', color: 'orange' },
-  { key: 'afternoonRefreshments',label: 'Afternoon Refreshments',icon: '🧃', color: 'teal' },
+  { key: 'eveningRefreshments',  label: 'Evening Refreshments',  icon: '🧃', color: 'teal' },
   { key: 'lunch',                label: 'Lunch',                 icon: '🍽️', color: 'rose' },
   { key: 'kitReceived',          label: 'Kit Received',          icon: '🎒', color: 'violet' },
 ];
@@ -29,11 +29,12 @@ const Dashboard = () => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    let intervalId;
     const fetchAll = async () => {
       try {
         const [statsRes, partRes] = await Promise.all([
-          fetch('http://localhost:5000/api/participants/stats'),
-          fetch('http://localhost:5000/api/participants'),
+          fetch('/api/participants/stats'),
+          fetch('/api/participants'),
         ]);
         if (!statsRes.ok || !partRes.ok) throw new Error('Failed to fetch data');
         const [statsData, partData] = await Promise.all([statsRes.json(), partRes.json()]);
@@ -45,7 +46,14 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
+    
+    // Initial fetch
     fetchAll();
+    
+    // Poll every 3 seconds for real-time multi-device sync
+    intervalId = setInterval(fetchAll, 3000);
+    
+    return () => clearInterval(intervalId);
   }, []);
 
   const filteredParticipants = participants.filter(p => {

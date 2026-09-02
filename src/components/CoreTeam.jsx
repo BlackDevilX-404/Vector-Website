@@ -32,28 +32,28 @@ const SilhouetteSVG = () => (
 
 const team = [
   {
-    role: 'Event Chair',
-    label: 'Chairperson',
+    name: 'Rtr. PP. Vinay Sakthi',
+    roleLabel: 'Event Chairman',
     tagline: 'The vision behind every decision.',
-    photo: null, // Replace with: '/photos/chair.jpg'
+    photo: '/photos/core-chair.jpg',
   },
   {
-    role: 'Event Secretary',
-    label: 'Secretary',
+    name: 'Rtr. Raga Shuruthi',
+    roleLabel: 'Event Secretary',
     tagline: 'Every word recorded. Every moment kept.',
-    photo: null, // Replace with: '/photos/secretary.jpg'
+    photo: '/photos/core-secretary.jpg',
   },
   {
-    role: 'Event Treasurer',
-    label: 'Treasurer',
+    name: 'Rtr. Sabari Krishna M',
+    roleLabel: 'Event Treasurer',
     tagline: 'Every rupee placed with purpose.',
-    photo: null, // Replace with: '/photos/treasurer.jpg'
+    photo: '/photos/core-treasurer.jpg',
   },
   {
-    role: 'Event Convenor',
-    label: 'Convenor',
+    name: 'Rtr. Anu Shri',
+    roleLabel: 'Event Convenor',
     tagline: 'Bridging people. Connecting purpose.',
-    photo: null, // Replace with: '/photos/convenor.jpg'
+    photo: '/photos/core-convenor.jpg',
   },
 ];
 
@@ -85,10 +85,10 @@ const CoreTeam = () => {
 
         {/* 4-column photo card grid */}
         <div className="coreteam-grid">
-          {team.map(({ role, label, tagline, photo }, i) => (
+          {team.map(({ name, roleLabel, tagline, photo }, i) => (
             <div
               className="ct-card reveal"
-              key={role}
+              key={name}
               style={{ transitionDelay: `${i * 90}ms` }}
             >
               {/* Top bar accent */}
@@ -97,22 +97,20 @@ const CoreTeam = () => {
               {/* Photo zone */}
               <div className="ct-photo-zone">
                 {photo ? (
-                  <img src={photo} alt={role} className="ct-photo" />
+                  <img src={photo} alt={name} className="ct-photo" />
                 ) : (
                   <div className="ct-photo-placeholder">
                     <SilhouetteSVG />
                   </div>
                 )}
-                {/* Gradient fade into card body */}
-                <div className="ct-photo-fade" />
                 {/* Gold inner glow (visible on hover) */}
                 <div className="ct-photo-glow" />
               </div>
 
               {/* Card body */}
               <div className="ct-card-body">
-                <div className="ct-role-label">{label}</div>
-                <h3 className="ct-role-name">{role}</h3>
+                <div className="ct-role-label">{roleLabel}</div>
+                <h3 className="ct-role-name">{name}</h3>
                 {/* Tagline slides up on hover */}
                 <p className="ct-tagline">{tagline}</p>
               </div>

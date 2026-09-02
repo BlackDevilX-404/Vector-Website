@@ -156,7 +156,10 @@
 /* ── PHOTO ZONE (3:4 portrait, identical to Core Team) ── */
 .hl-photo-zone {
   position: relative;
-  width: 100%;
+  width: calc(100% - 2.4rem);
+  margin: 1.2rem auto 0;
+  border: 1px solid rgba(197, 160, 89, 0.25);
+  border-radius: 4px;
   aspect-ratio: 3 / 4;
   overflow: hidden;
   background: linear-gradient(
@@ -206,19 +209,6 @@
   opacity: 0.65;
 }
 
-/* Gradient fade from photo into card body */
-.hl-photo-fade {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 55%;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(18,33,65,0.6) 55%,
-    rgba(18,33,65,0.98) 100%
-  );
-  z-index: 2;
-}
 
 /* Gold inner glow — on hover */
 .hl-photo-glow {
@@ -240,7 +230,7 @@
 
 /* ── CARD BODY ── */
 .hl-card-body {
-  padding: 1.4rem 1.6rem 1.8rem;
+  padding: 1rem 1.6rem 1.8rem;
   position: relative;
   z-index: 2;
   overflow: hidden;
@@ -268,25 +258,12 @@
   color: var(--paper);
   line-height: 1.15;
   margin-bottom: 0;
-  transition: transform 0.35s var(--ease-out-expo);
 }
 
-/* Divider that appears on hover */
-.hl-card:hover .hl-name::after {
-  content: '';
-  display: block;
-  width: 32px;
-  height: 1px;
-  background: rgba(197,160,89,0.35);
-  margin-top: 0.5rem;
-}
-
-/* Tagline slides up on hover */
+/* Tagline */
 .hl-tagline {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.8rem;
-  color: rgba(197,160,89,0.65);
+  font-size: 0.82rem;
+  color: rgba(244,240,232,0.6);
   line-height: 1.5;
   margin: 0;
   max-height: 0;
@@ -311,6 +288,13 @@
   .hl-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  .hl-label-text {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.6;
+    letter-spacing: 0.15em;
+    padding: 0 1rem;
+  }
 }
 
 @media (max-width: 580px) {
@@ -320,4 +304,5 @@
     margin: 0 auto;
   }
   .hl-ghost { font-size: clamp(3rem, 22vw, 7rem); }
+  .hl-label-line { display: none; } /* Hide lines on small mobile so text can take full width */
 }

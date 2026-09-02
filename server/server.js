@@ -4,18 +4,25 @@ const cors = require('cors');
 const multer = require('multer');
 const XLSX = require('xlsx');
 const Participant = require('./models/Participant');
+const Material    = require('./models/Material');
+
+const path = require('path');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the React app build directory
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // Multer setup (memory storage for Excel parsing)
 const upload = multer({ storage: multer.memoryStorage() });
 
 // MongoDB connection
-mongoose.connect('mongodb://127.0.0.1:27017/vector_event')
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/vector_event';
+mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB:', err));
 
@@ -86,7 +93,7 @@ app.get('/api/participants/stats', async (req, res) => {
         morningAttendance: group.filter(p => p.morningAttendance).length,
         afternoonAttendance: group.filter(p => p.afternoonAttendance).length,
         morningRefreshments: group.filter(p => p.morningRefreshments).length,
-        afternoonRefreshments: group.filter(p => p.afternoonRefreshments).length,
+        eveningRefreshments: group.filter(p => p.eveningRefreshments).length,
         lunch: group.filter(p => p.lunch).length,
         kitReceived: group.filter(p => p.kitReceived).length,
       };
@@ -97,7 +104,7 @@ app.get('/api/participants/stats', async (req, res) => {
       morningAttendance: countIf('morningAttendance'),
       afternoonAttendance: countIf('afternoonAttendance'),
       morningRefreshments: countIf('morningRefreshments'),
-      afternoonRefreshments: countIf('afternoonRefreshments'),
+      eveningRefreshments: countIf('eveningRefreshments'),
       lunch: countIf('lunch'),
       kitReceived: countIf('kitReceived'),
       groupStats,
@@ -157,8 +164,8 @@ app.post('/api/participants/upload-excel', upload.single('file'), async (req, re
       const clubName = (getVal(['club', 'institution', 'college', 'school', 'organization']) ?? '').toString().trim();
       const groupRaw = (getVal(['group', 'team']) ?? '').toString().trim();
       const portfolio = (getVal(['portfolio', 'designation', 'role', 'position']) ?? '').toString().trim();
-      const sNoRaw = getVal(['sno', 's.no', 'sl no', 'serial', 'id']);
-      const sNo = parseInt(sNoRaw, 10) || undefined;
+      const riIdRaw = getVal(['riid', 'ri id', 'ri-id', 'sno', 's.no', 'sl no', 'serial', 'id']);
+      const riId = parseInt(riIdRaw, 10) || undefined;
 
       if (!name) continue;
 
@@ -178,7 +185,7 @@ app.post('/api/participants/upload-excel', upload.single('file'), async (req, re
 
       try {
         await Participant.create({
-          sNo,
+          riId,
           name,
           clubName,
           group: groupLabel,
@@ -204,15 +211,44 @@ app.post('/api/participants/upload-excel', upload.single('file'), async (req, re
 // POST create participant manually
 app.post('/api/participants', async (req, res) => {
   try {
-    const participant = new Participant(req.body);
+    const { riId, name, clubName, group, portfolio } = req.body;
+    
+    // Parse group number to generate proper ID
+    const groupNum = parseGroupNum(group);
+    const groupLabel = `Group ${groupNum}`;
+    const participantId = await generateParticipantId(groupNum);
+
+    const participant = new Participant({
+      riId: riId || undefined,
+      name,
+      clubName,
+      group: groupLabel,
+      portfolio,
+      participantId,
+      email: `${participantId}@vector2026.com`,
+      role: 'student',
+      institution: clubName,
+    });
+    
     await participant.save();
     res.status(201).json(participant);
   } catch (error) {
     if (error.code === 11000) {
-      res.status(400).json({ error: 'Email already registered' });
+      res.status(400).json({ error: 'Participant already exists or ID conflict' });
     } else {
       res.status(400).json({ error: 'Invalid data' });
     }
+  }
+});
+
+// DELETE participant by mongo _id
+app.delete('/api/participants/:id', async (req, res) => {
+  try {
+    const deleted = await Participant.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ error: 'Participant not found' });
+    res.json({ message: 'Deleted successfully', participant: deleted });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete participant' });
   }
 });
 
@@ -220,7 +256,7 @@ app.post('/api/participants', async (req, res) => {
 app.put('/api/participants/:id/checkin', async (req, res) => {
   try {
     const allowed = ['morningAttendance', 'afternoonAttendance', 'morningRefreshments',
-      'afternoonRefreshments', 'lunch', 'kitReceived', 'attended'];
+      'eveningRefreshments', 'lunch', 'kitReceived', 'attended'];
     const update = {};
     allowed.forEach(field => {
       if (req.body[field] !== undefined) update[field] = req.body[field];
@@ -254,16 +290,139 @@ app.put('/api/participants/:id/attendance', async (req, res) => {
   }
 });
 
+// 8 Admin Accounts for multi-device login (without 'admin' in ID)
+const ADMIN_ACCOUNTS = {
+  vector1: 'vector2026_one',
+  vector2: 'vector2026_two',
+  vector3: 'vector2026_three',
+  vector4: 'vector2026_four',
+  vector5: 'vector2026_five',
+  vector6: 'vector2026_six',
+  vector7: 'vector2026_seven',
+  vector8: 'vector2026_eight'
+};
+
 // POST login
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
-  if (username === 'admin' && password === 'vector2026') {
-    res.json({ token: 'admin-auth-token-xyz' });
+  if (ADMIN_ACCOUNTS[username] && ADMIN_ACCOUNTS[username] === password) {
+    res.json({ token: `admin-auth-token-${username}` });
   } else {
     res.status(401).json({ error: 'Invalid credentials' });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// ─── Learning Materials ──────────────────────────────────────────────────────
+
+// Seed default items if collection is empty
+const MATERIAL_SEED = [
+  {
+    key: 'software',
+    num: '01',
+    title: 'Software for Participants',
+    group: '',
+    tagline: 'Your creative toolkit for the day.',
+    desc: 'The software package provided for all participants. Download and install before you arrive to hit the ground running.',
+  },
+  {
+    key: 'editorial-kit',
+    num: '02',
+    title: 'Editorial Kit',
+    group: '',
+    tagline: 'Brand assets and design essentials.',
+    desc: 'The official VECTOR editorial kit — typefaces, colour palettes, logo files, and brand guidelines to use across all your workshop outputs.',
+  },
+  {
+    key: 'editorial-manual',
+    num: '03',
+    title: 'Editorial Manual',
+    group: '',
+    tagline: 'The complete style and process guide.',
+    desc: 'A comprehensive reference manual covering editorial standards, content workflow, layout principles, and visual storytelling guidelines.',
+  },
+  {
+    key: 'trainer-slides-1',
+    num: '04',
+    title: "Trainer's Slides — Session 1",
+    group: "Trainer's Slides",
+    tagline: 'Session 1 presentation deck.',
+    desc: 'Slides from the first training session. Released after the session concludes so you can revisit and reinforce what you learned.',
+  },
+  {
+    key: 'trainer-slides-2',
+    num: '05',
+    title: "Trainer's Slides — Session 2",
+    group: "Trainer's Slides",
+    tagline: 'Session 2 presentation deck.',
+    desc: 'Slides from the second training session. A deep dive into the session topics — yours to keep and reference long after the event.',
+  },
+  {
+    key: 'trainer-slides-3',
+    num: '06',
+    title: "Trainer's Slides — Session 3",
+    group: "Trainer's Slides",
+    tagline: 'Session 3 presentation deck.',
+    desc: 'Slides from the third and final training session. Everything you need to carry the learning forward into your own creative work.',
+  },
+];
+
+async function seedMaterials() {
+  const count = await Material.countDocuments();
+  if (count === 0) {
+    await Material.insertMany(MATERIAL_SEED);
+    console.log('Learning Materials seeded (6 items).');
+  }
+}
+
+// GET all materials (public — returns accessGranted + url per item)
+// Also seeds on first request if collection is empty (belt + suspenders)
+app.get('/api/materials', async (req, res) => {
+  try {
+    await seedMaterials();           // no-op if already seeded
+    const materials = await Material.find().sort({ num: 1 });
+    res.json(materials);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch materials' });
+  }
+});
+
+// PATCH toggle accessGranted
+app.patch('/api/materials/:id/access', async (req, res) => {
+  try {
+    const { accessGranted } = req.body;
+    const material = await Material.findByIdAndUpdate(
+      req.params.id,
+      { accessGranted },
+      { new: true }
+    );
+    if (!material) return res.status(404).json({ error: 'Material not found' });
+    res.json(material);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update access' });
+  }
+});
+
+// PATCH update URL
+app.patch('/api/materials/:id/url', async (req, res) => {
+  try {
+    const { url } = req.body;
+    const material = await Material.findByIdAndUpdate(
+      req.params.id,
+      { url },
+      { new: true }
+    );
+    if (!material) return res.status(404).json({ error: 'Material not found' });
+    res.json(material);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update URL' });
+  }
+});
+// Handle React routing, return all requests to React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+});
+
+app.listen(PORT, async () => {
+  console.log(`Server running on port ${PORT}`);
+  await seedMaterials();
 });

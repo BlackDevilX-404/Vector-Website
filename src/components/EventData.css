@@ -1,47 +1,12 @@
 /* ============================================================
-   EVENT DATA / LOGISTICS — Ink bg, glassmorphic cards, gold connector
+   EVENT DATA / LOGISTICS — Asset Bin Metaphor
    ============================================================ */
 
 .event-data-section {
-  background-color: var(--ink);
-  padding: 7rem 0 8rem;
+  background-color: #0b0d13;
+  padding: 7rem 0;
   position: relative;
   overflow: hidden;
-}
-
-/* ── BACKGROUND APERTURE RINGS ── */
-.logistics-bg-rings {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.logistics-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(197,160,89,0.045);
-  transform: translate(-50%, -50%);
-}
-
-.logistics-ring-1 {
-  width: 700px; height: 700px;
-  top: 50%; left: 80%;
-  animation: spin-slow 60s linear infinite;
-}
-
-.logistics-ring-2 {
-  width: 480px; height: 480px;
-  top: 50%; left: 80%;
-  border-color: rgba(197,160,89,0.07);
-  animation: spin-slow-reverse 40s linear infinite;
-}
-
-.logistics-ring-3 {
-  width: 260px; height: 260px;
-  top: 50%; left: 80%;
-  border-color: rgba(197,160,89,0.1);
-  animation: pulse-glow 6s ease-in-out infinite;
 }
 
 /* ── HEADER ── */
@@ -62,285 +27,228 @@
   letter-spacing: 0.01em;
 }
 
-/* ── GOLD CONNECTOR LINE ── */
-.logistics-connector {
-  position: relative;
-  width: 100%;
-  height: 2px;
-  margin-bottom: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  /* vertical offset so dots sit right above card tops */
-  padding: 0 calc(16.666% + 0px);
-}
-
-.connector-line {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(197,160,89,0.12) 15%,
-    rgba(197,160,89,0.55) 35%,
-    var(--gold-light) 50%,
-    rgba(197,160,89,0.55) 65%,
-    rgba(197,160,89,0.12) 85%,
-    transparent 100%
-  );
-  transform: translateY(-50%);
-}
-
-.connector-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--gold);
-  border: 2px solid var(--ink);
-  box-shadow: 0 0 12px rgba(197,160,89,0.6);
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-.connector-dot-2 { animation-delay: -1s; }
-.connector-dot-3 { animation-delay: -2s; }
-
-/* ── GRID ── */
-.event-data-grid {
+/* ── ASSET BIN LAYOUT ── */
+.logistics-asset-bin {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 350px 1fr;
   gap: 1.5rem;
-  position: relative;
-  z-index: 2;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #0f1219;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  min-height: 480px;
+  transform: translateZ(0);
 }
 
-/* ── DATA CARDS ── */
-.data-card {
-  background: rgba(18,33,65,0.45);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-radius: 3px;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  border: 1px solid rgba(197,160,89,0.1);
-  border-top: none; /* connector line handles the top */
-  transition: var(--transition-normal);
+@media (max-width: 800px) {
+  .logistics-asset-bin {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 450px;
+  }
+}
+
+/* ── PANELS SHARED ── */
+.bin-sidebar, .bin-inspector {
+  background: #151821;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
   overflow: hidden;
 }
 
-/* Full-height left gold accent line */
-.card-accent-border {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2px;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    var(--gold) 0%,
-    rgba(197,160,89,0.4) 50%,
-    transparent 100%
-  );
-  border-radius: 0 0 0 3px;
-  transition: opacity 0.3s ease;
-}
-
-/* Top shimmer sweep on hover */
-.data-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%; right: 0;
-  height: 100%;
-  background: linear-gradient(
-    135deg,
-    rgba(197,160,89,0.06) 0%,
-    transparent 50%
-  );
-  transition: left 0.5s var(--ease-out-expo);
-  pointer-events: none;
-}
-
-/* Top gold bar */
-.data-card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light), transparent);
-  opacity: 0.6;
-}
-
-.data-card:hover::before { left: 0; }
-
-.data-card:hover {
-  transform: translateY(-10px);
-  border-color: rgba(197,160,89,0.25);
-  box-shadow:
-    0 24px 64px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(197,160,89,0.12),
-    var(--gold-glow-sm);
-  background: rgba(18,33,65,0.65);
-}
-
-/* ── FEATURED CENTRE CARD ── */
-.data-card-featured {
-  background: rgba(18,33,65,0.6);
-  border-color: rgba(197,160,89,0.18);
-  transform: translateY(-8px);
-}
-
-.data-card-featured::after {
-  opacity: 1;
-}
-
-.card-featured-glow {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(197,160,89,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.data-card-featured:hover {
-  transform: translateY(-16px);
-}
-
-/* ── ICON ── */
-.data-icon-wrapper {
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  background: rgba(197,160,89,0.06);
-  border: 1px solid rgba(197,160,89,0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  transition: var(--transition-normal);
-  position: relative;
-  z-index: 1;
-}
-
-/* Pulsing ring on icon */
-.data-icon-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1px solid rgba(197,160,89,0.08);
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
-.data-card:hover .data-icon-wrapper {
-  background: rgba(197,160,89,0.12);
-  box-shadow: var(--gold-glow-sm);
-  transform: scale(1.08);
-}
-
-/* ── TEXT ── */
-.data-title {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.22em;
+.bin-header, .inspector-header {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: #94a3b8;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 0.75rem;
-  position: relative;
-  z-index: 1;
+  padding: 0.75rem 1rem;
+  background: #1a1e29;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.data-stat {
+.bin-icons {
+  letter-spacing: 0.2em;
+}
+
+/* ── SIDEBAR FILES ── */
+.bin-files {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bin-file-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bin-file-item:hover {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.05);
+}
+
+.bin-file-item.active {
+  background: rgba(197, 160, 89, 0.1);
+  border-color: rgba(197, 160, 89, 0.3);
+}
+
+.file-icon {
+  color: #64748b;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bin-file-item.active .file-icon {
+  color: var(--gold);
+}
+
+.file-name {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+.bin-file-item.active .file-name {
+  color: var(--gold-light);
+  font-weight: bold;
+}
+
+.file-meta {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+/* ── INSPECTOR PANEL ── */
+.inspector-content {
+  flex: 1;
+  padding: 2rem;
+  position: relative;
+  background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.preview-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  animation: fadeIn 0.3s ease-out;
+  will-change: transform, opacity;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.preview-icon-large {
+  color: var(--gold);
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.3));
+}
+
+.preview-icon-large svg {
+  width: 100%;
+  height: 100%;
+}
+
+.preview-title {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 5vw, 4.2rem);
-  font-weight: 700;
-  color: var(--paper);
-  line-height: 1;
-  margin-bottom: 0.9rem;
-  letter-spacing: 0.02em;
-  text-shadow: 0 0 30px rgba(197,160,89,0.2);
-  position: relative;
-  z-index: 1;
+  font-size: 1.8rem;
+  color: #f8fafc;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.data-stat-plus {
-  font-size: 0.6em;
+.preview-stat {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 800;
   color: var(--gold);
+  line-height: 1;
+  margin: 1rem 0;
+  text-shadow: 0 0 20px rgba(197, 160, 89, 0.2);
+}
+
+.preview-stat-plus {
+  font-size: 2rem;
+  color: var(--gold-light);
   vertical-align: super;
-  line-height: 0;
 }
 
-.data-desc {
-  color: rgba(244,240,232,0.45);
-  font-size: 0.9rem;
-  line-height: 1.7;
-  position: relative;
-  z-index: 1;
+.preview-desc {
+  font-size: 0.95rem;
+  color: rgba(244,240,232,0.6);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
 }
 
-/* ── LIST ── */
-.data-list {
+.preview-list {
   list-style: none;
   padding: 0;
-  margin: 1.2rem 0 0 0;
-  text-align: left;
-  width: 100%;
-  border-top: 1px solid rgba(197,160,89,0.08);
-  padding-top: 1rem;
-  position: relative;
-  z-index: 1;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.data-list li {
-  padding: 0.55rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  color: rgba(244,240,232,0.55);
-  font-size: 0.88rem;
+.preview-list li {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  transition: color 0.2s ease;
+  font-size: 0.95rem;
+  color: #cbd5e1;
 }
 
-.data-list li:last-child { border-bottom: none; }
-
-.data-card:hover .data-list li {
-  color: rgba(244,240,232,0.65);
-}
-
-/* Gold pen-nib diamond bullet */
-.data-list li::before {
-  content: '◆';
+.list-bullet {
   color: var(--gold);
-  font-size: 0.42rem;
-  flex-shrink: 0;
-  opacity: 0.75;
+  font-size: 0.7rem;
 }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  .event-data-grid {
-    grid-template-columns: 1fr;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-  .data-card-featured { transform: none; }
-  .data-card:hover { transform: translateY(-6px); }
-  .logistics-connector { display: none; }
-  .logistics-ring-1,
-  .logistics-ring-2,
-  .logistics-ring-3 { left: 90%; }
+.mt-auto {
+  margin-top: auto;
+}
+
+.preview-meta-list {
+  border-top: 1px dashed rgba(255,255,255,0.1);
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.status-ok {
+  color: #4ade80;
+  font-weight: bold;
 }

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './ExcelUpload.css';
 
 const ExcelUpload = () => {
@@ -8,6 +8,48 @@ const ExcelUpload = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
+
+  // Manual Add state
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [manualData, setManualData] = useState({
+    riId: '', name: '', clubName: '', group: '', portfolio: ''
+  });
+  
+  // Participant List state
+  const [participants, setParticipants] = useState([]);
+  const [loadingList, setLoadingList] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const fetchParticipants = async () => {
+    setLoadingList(true);
+    try {
+      const res = await fetch('/api/participants');
+      if (res.ok) {
+        const data = await res.json();
+        setParticipants(data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingList(false);
+    }
+  };
+
+  const filteredParticipants = participants.filter(p => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      (p.name && p.name.toLowerCase().includes(q)) ||
+      (p.participantId && p.participantId.toLowerCase().includes(q)) ||
+      (p.clubName && p.clubName.toLowerCase().includes(q)) ||
+      (p.institution && p.institution.toLowerCase().includes(q)) ||
+      (p.riId && String(p.riId).toLowerCase().includes(q))
+    );
+  });
+
+  useEffect(() => {
+    fetchParticipants();
+  }, []);
 
   const handleFile = (f) => {
     if (!f) return;
@@ -37,7 +79,7 @@ const ExcelUpload = () => {
     formData.append('file', file);
 
     try {
-      const res = await fetch('http://localhost:5000/api/participants/upload-excel', {
+      const res = await fetch('/api/participants/upload-excel', {
         method: 'POST',
         body: formData,
       });
@@ -45,6 +87,7 @@ const ExcelUpload = () => {
       if (!res.ok) throw new Error(data.error || 'Upload failed');
       setResult(data);
       setFile(null);
+      fetchParticipants(); // refresh list
     } catch (err) {
       setError(err.message);
     } finally {
@@ -52,11 +95,48 @@ const ExcelUpload = () => {
     }
   };
 
+  const handleManualSubmit = async (e) => {
+    e.preventDefault();
+    if (!manualData.name) {
+      alert("Name is required");
+      return;
+    }
+    try {
+      const res = await fetch('/api/participants', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(manualData)
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to add');
+      }
+      setManualData({ riId: '', name: '', clubName: '', group: '', portfolio: '' });
+      setShowAddForm(false);
+      fetchParticipants(); // refresh list
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleDelete = async (id, name) => {
+    if (!window.confirm(`Are you sure you want to delete ${name}?`)) return;
+    try {
+      const res = await fetch(`/api/participants/${id}`, {
+        method: 'DELETE'
+      });
+      if (!res.ok) throw new Error('Failed to delete');
+      fetchParticipants();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   return (
     <div className="upload-page">
       <h1 className="page-title">Upload Participants</h1>
       <p className="upload-subtitle">
-        Upload an Excel file. The system will automatically detect columns for: <strong>S.No, Name, Club/Institution, Group, and Portfolio/Designation</strong>.<br />
+        Upload an Excel file or manually add participants as a fallback. The system will automatically detect columns for: <strong>RI ID, Name, Club/Institution, Group, and Portfolio/Designation</strong>.<br />
         Participants already in the database (matched by name) will be preserved.
       </p>
 
@@ -110,12 +190,12 @@ const ExcelUpload = () => {
         <div className="upload-result">
           <div className="result-card success">
             <div className="result-icon">✅</div>
-            <div className="result-label">New Participants Added</div>
+            <div className="result-label">Added</div>
             <div className="result-value">{result.added}</div>
           </div>
           <div className="result-card skipped">
             <div className="result-icon">⏭️</div>
-            <div className="result-label">Already Existed (Skipped)</div>
+            <div className="result-label">Skipped</div>
             <div className="result-value">{result.skipped}</div>
           </div>
           {result.errors?.length > 0 && (
@@ -129,36 +209,87 @@ const ExcelUpload = () => {
         </div>
       )}
 
-      <div className="upload-tips">
-        <h3>📋 Excel Format Guide</h3>
-        <table className="format-table">
-          <thead>
-            <tr>
-              <th>S.No / ID</th>
-              <th>Name</th>
-              <th>Club / Institution</th>
-              <th>Group</th>
-              <th>Portfolio / Designation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Arjun Sharma</td>
-              <td>Tech Club</td>
-              <td>Group 1</td>
-              <td>Design Lead</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Priya Nair</td>
-              <td>Robotics Club</td>
-              <td>Group 3</td>
-              <td>Developer</td>
-            </tr>
-          </tbody>
-        </table>
+      <hr className="divider" />
+
+      <div className="manual-management-header">
+        <h2>Registered Participants ({filteredParticipants.length})</h2>
+        <div className="manual-management-actions">
+          <input 
+            type="text" 
+            className="admin-search-input" 
+            placeholder="Search participants..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button className="btn-add-manual" onClick={() => setShowAddForm(!showAddForm)}>
+            {showAddForm ? 'Close Form' : '+ Add Participant'}
+          </button>
+        </div>
       </div>
+
+      {showAddForm && (
+        <form className="admin-manual-form" onSubmit={handleManualSubmit}>
+          <div className="admin-form-group">
+            <label>RI ID (Optional)</label>
+            <input type="number" value={manualData.riId} onChange={e => setManualData({...manualData, riId: e.target.value})} placeholder="e.g. 1002" />
+          </div>
+          <div className="admin-form-group">
+            <label>Name</label>
+            <input type="text" value={manualData.name} onChange={e => setManualData({...manualData, name: e.target.value})} required placeholder="e.g. Arjun Sharma" />
+          </div>
+          <div className="admin-form-group">
+            <label>Club / Institution</label>
+            <input type="text" value={manualData.clubName} onChange={e => setManualData({...manualData, clubName: e.target.value})} placeholder="e.g. Tech Club" />
+          </div>
+          <div className="admin-form-group">
+            <label>Group</label>
+            <input type="text" value={manualData.group} onChange={e => setManualData({...manualData, group: e.target.value})} placeholder="e.g. Group 1" />
+          </div>
+          <div className="admin-form-group">
+            <label>Portfolio / Designation</label>
+            <input type="text" value={manualData.portfolio} onChange={e => setManualData({...manualData, portfolio: e.target.value})} placeholder="e.g. Developer" />
+          </div>
+          <button type="submit" className="btn-submit-manual">Add to Database</button>
+        </form>
+      )}
+
+      <div className="participant-list-container">
+        {loadingList ? (
+          <div className="list-loading">Loading participants...</div>
+        ) : participants.length === 0 ? (
+          <div className="list-empty">No participants uploaded yet.</div>
+        ) : filteredParticipants.length === 0 ? (
+          <div className="list-empty">No matching participants found.</div>
+        ) : (
+          <table className="format-table">
+            <thead>
+              <tr>
+                <th>RI ID</th>
+                <th>Participant ID</th>
+                <th>Name</th>
+                <th>Club / Institution</th>
+                <th>Group</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredParticipants.map(p => (
+                <tr key={p._id}>
+                  <td>{p.riId || p.sNo || '-'}</td>
+                  <td><strong style={{ color: 'var(--gold)' }}>{p.participantId}</strong></td>
+                  <td>{p.name}</td>
+                  <td>{p.clubName || p.institution}</td>
+                  <td>{p.group}</td>
+                  <td>
+                    <button className="btn-delete" onClick={() => handleDelete(p._id, p.name)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
     </div>
   );
 };

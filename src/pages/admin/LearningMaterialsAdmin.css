@@ -1,0 +1,312 @@
+/* ============================================================
+   LEARNING MATERIALS ADMIN — control panel page
+   ============================================================ */
+
+.lm-admin {
+  padding: 0.5rem 0 3rem;
+}
+
+/* ── PAGE TITLE (self-contained, no dependency on Dashboard.css) ── */
+.lm-page-title {
+  font-family: 'Oswald', 'Impact', system-ui, sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(244, 240, 232, 0.95);
+  margin-bottom: 0.75rem;
+  line-height: 1.1;
+}
+
+.lm-admin-intro {
+  font-size: 0.9rem;
+  color: rgba(244,240,232,0.5);
+  margin-bottom: 1.5rem;
+  max-width: 640px;
+  line-height: 1.7;
+}
+
+/* ── STATUS BANNERS ── */
+.lm-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
+}
+
+.lm-banner code {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  background: rgba(0,0,0,0.25);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.78rem;
+}
+
+.lm-banner-loading {
+  background: rgba(197,160,89,0.08);
+  border: 1px solid rgba(197,160,89,0.2);
+  color: rgba(197,160,89,0.8);
+}
+
+.lm-banner-error {
+  background: rgba(248,113,113,0.08);
+  border: 1px solid rgba(248,113,113,0.25);
+  color: rgba(248,113,113,0.9);
+}
+
+.lm-banner-error strong { color: #f87171; }
+
+.lm-banner-ok {
+  background: rgba(78,203,141,0.07);
+  border: 1px solid rgba(78,203,141,0.2);
+  color: rgba(78,203,141,0.75);
+}
+
+/* ── GROUP LABELS ── */
+.lm-group-label {
+  font-family: var(--font-display, 'Oswald', sans-serif);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(197,160,89,0.65);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(197,160,89,0.12);
+}
+.lm-group-label-mt { margin-top: 2.5rem; }
+.lm-group-desc {
+  font-size: 0.82rem;
+  color: rgba(244,240,232,0.35);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+/* ── CARD LIST ── */
+.lm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── INDIVIDUAL CARD ── */
+.lm-card {
+  display: grid;
+  grid-template-columns: 260px 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.4rem 1.8rem;
+  border-radius: 4px;
+  border: 1px solid rgba(197,160,89,0.1);
+  border-left: 3px solid rgba(197,160,89,0.15);
+  background: rgba(18,33,65,0.5);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.lm-card-granted {
+  border-left-color: #4ecb8d;
+  background: rgba(18,33,65,0.65);
+}
+
+.lm-card-locked {
+  border-left-color: rgba(244,240,232,0.12);
+}
+
+.lm-card-offline {
+  opacity: 0.6;
+  filter: grayscale(0.3);
+}
+
+/* ── META (left) ── */
+.lm-card-meta {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.lm-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: rgba(197,160,89,0.4);
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.lm-title {
+  font-family: var(--font-display, 'Oswald', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(244,240,232,0.9);
+  margin-bottom: 0.2rem;
+  line-height: 1.2;
+}
+
+.lm-tagline {
+  font-size: 0.78rem;
+  color: rgba(244,240,232,0.35);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* ── URL AREA (centre) ── */
+.lm-url-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.lm-url-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(197,160,89,0.5);
+  font-family: 'DM Mono', monospace;
+}
+
+.lm-url-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.lm-url-input {
+  flex: 1;
+  background: rgba(10,21,40,0.6);
+  border: 1px solid rgba(197,160,89,0.15);
+  border-radius: 3px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.82rem;
+  color: rgba(244,240,232,0.85);
+  font-family: 'DM Mono', monospace;
+  outline: none;
+  transition: border-color 0.2s ease;
+  min-width: 0;
+}
+
+.lm-url-input:focus {
+  border-color: rgba(197,160,89,0.45);
+}
+
+.lm-url-input::placeholder {
+  color: rgba(244,240,232,0.2);
+}
+
+.lm-save-btn {
+  flex-shrink: 0;
+  padding: 0.55rem 1.1rem;
+  background: rgba(197,160,89,0.12);
+  border: 1px solid rgba(197,160,89,0.25);
+  border-radius: 3px;
+  color: rgba(197,160,89,0.9);
+  font-size: 0.78rem;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.lm-save-btn:hover:not(:disabled) {
+  background: rgba(197,160,89,0.22);
+  border-color: rgba(197,160,89,0.5);
+  color: #c5a059;
+}
+
+.lm-save-btn-saved {
+  background: rgba(78,203,141,0.12) !important;
+  border-color: rgba(78,203,141,0.35) !important;
+  color: #4ecb8d !important;
+}
+
+.lm-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lm-url-hint {
+  font-size: 0.7rem;
+  color: rgba(244,240,232,0.22);
+  font-style: italic;
+}
+
+/* ── TOGGLE (right) ── */
+.lm-toggle-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  min-width: 150px;
+}
+
+.lm-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.4rem 0.9rem 0.4rem 0.4rem;
+  border-radius: 100px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.lm-toggle-on {
+  border-color: rgba(78,203,141,0.5);
+  color: #4ecb8d;
+  background: rgba(78,203,141,0.08);
+}
+
+.lm-toggle-off {
+  border-color: rgba(244,240,232,0.15);
+  color: rgba(244,240,232,0.35);
+  background: rgba(244,240,232,0.03);
+}
+
+.lm-toggle-off:hover:not(:disabled) {
+  border-color: rgba(78,203,141,0.3);
+  color: rgba(78,203,141,0.6);
+}
+
+.lm-toggle-knob {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.25s ease;
+}
+
+.lm-toggle-on .lm-toggle-knob  { background: #4ecb8d; }
+.lm-toggle-off .lm-toggle-knob { background: rgba(244,240,232,0.15); }
+
+.lm-toggle-hint {
+  font-size: 0.68rem;
+  color: rgba(244,240,232,0.28);
+  text-align: center;
+  font-style: italic;
+  line-height: 1.3;
+  max-width: 140px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1000px) {
+  .lm-card {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+  .lm-toggle-area {
+    flex-direction: row;
+    align-items: center;
+    min-width: unset;
+  }
+  .lm-toggle-hint { max-width: none; }
+}

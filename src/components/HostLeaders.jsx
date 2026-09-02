@@ -38,19 +38,19 @@ const SilhouetteSVG = () => (
  */
 const clubs = [
   {
-    clubName: 'Club Name',          // ← Replace
+    clubName: 'From the Rotaract Club of Coimbatore Nexus',
     members: [
-      { name: 'Name', portfolio: 'President',  tagline: 'Leading with vision and conviction.',    photo: null },
-      { name: 'Name', portfolio: 'Secretary',  tagline: 'Administering every detail with care.',  photo: null },
-      { name: 'Name', portfolio: 'Secretary',  tagline: 'Keeping every commitment on track.',     photo: null },
+      { name: 'Rtr. Saran', portfolio: 'President',  tagline: 'Leading with vision and conviction.',    photo: '/photos/nexus-1.jpg' },
+      { name: 'Rtr. Akshaya Lakshmi', portfolio: 'Secretary Administration',  tagline: 'Administering every detail with care.',  photo: '/photos/nexus-2.jpg' },
+      { name: 'Rtr. Koushik Kumar', portfolio: 'Secretary Communication',  tagline: 'Keeping every commitment on track.',     photo: '/photos/nexus-3.jpg' },
     ],
   },
   {
-    clubName: 'Club Name',          // ← Replace
+    clubName: 'From the Rotaract Club of Sri Shakthi Institute of Engineering and Technology',          // ← Replace
     members: [
-      { name: 'Name', portfolio: 'President',  tagline: 'Driving collaboration forward.',          photo: null },
-      { name: 'Name', portfolio: 'Secretary',  tagline: 'Coordinating with precision.',            photo: null },
-      { name: 'Name', portfolio: 'Secretary',  tagline: 'Connecting people. Connecting purpose.',  photo: null },
+      { name: 'Rtr. Mevin Kanishkar', portfolio: 'President',  tagline: 'Driving collaboration forward.',          photo: '/photos/shakthi-1.jpg' },
+      { name: 'Rtr. Darshan', portfolio: 'Secretary Administration',  tagline: 'Coordinating with precision.',            photo: '/photos/shakthi-2.jpg' },
+      { name: 'Rtr. Barath', portfolio: 'Secretary Communication',  tagline: 'Connecting people. Connecting purpose.',  photo: '/photos/shakthi-3.jpg' },
     ],
   },
 ];
@@ -114,7 +114,6 @@ const HostLeaders = () => {
                           <SilhouetteSVG />
                         </div>
                       )}
-                      <div className="hl-photo-fade" />
                       <div className="hl-photo-glow" />
                     </div>
 

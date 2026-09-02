@@ -123,16 +123,30 @@ const Hero = () => {
           {/* Live countdown to event */}
           <CountdownTimer />
 
-          {/* Gold primary CTA */}
-          <div className="hero-actions-centered">
-            <a href="#about" className="btn-primary hero-cta-primary">Learn More</a>
+
+
+          {/* Scroll indicator - replaced with a timeline scrub hint */}
+          <div className="hero-scroll-hint">
+            <div className="scroll-timeline-line" />
+            <span className="scroll-timeline-text">SCRUB TIMELINE</span>
+          </div>
+        </div>
+
+        {/* ── EDITING UI OVERLAYS ── */}
+        <div className="edit-ui-overlay">
+          {/* Crop marks */}
+          <div className="crop-mark crop-tl" />
+          <div className="crop-mark crop-tr" />
+          <div className="crop-mark crop-bl" />
+          <div className="crop-mark crop-br" />
+          
+          {/* Rec indicator */}
+          <div className="rec-indicator">
+            <span className="rec-dot" /> REC
           </div>
 
-          {/* Scroll indicator */}
-          <div className="hero-scroll-hint">
-            <div className="scroll-line" />
-            <span>Scroll</span>
-          </div>
+          {/* Timecode */}
+          <div className="timecode-indicator">00:00:00:00</div>
         </div>
       </div>
     </section>

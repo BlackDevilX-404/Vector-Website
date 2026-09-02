@@ -308,29 +308,108 @@
   color: var(--gold);
 }
 
-/* ── SCROLL HINT ── */
+
+
+/* ── TIMELINE SCRUB SCROLL ── */
 .hero-scroll-hint {
   margin-top: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
-  opacity: 0.35;
-  color: var(--paper);
+  opacity: 0.45;
+  color: var(--gold);
 }
 
-.hero-scroll-hint span {
+.scroll-timeline-text {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
 }
 
-.scroll-line {
-  width: 1px;
+.scroll-timeline-line {
+  position: relative;
+  width: 2px;
   height: 48px;
-  background: linear-gradient(to bottom, var(--gold), transparent);
-  animation: float 2.2s ease-in-out infinite;
+  background: rgba(197,160,89,0.2);
+}
+
+.scroll-timeline-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -4px;
+  width: 10px;
+  height: 14px;
+  background: var(--gold);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+  animation: scrub-timeline 2.5s ease-in-out infinite;
+}
+
+@keyframes scrub-timeline {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(34px); }
+  100% { transform: translateY(0); }
+}
+
+/* ── EDITING UI OVERLAYS ── */
+.edit-ui-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Crop marks */
+.crop-mark {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid rgba(197,160,89,0.4);
+}
+.crop-tl { top: 30px; left: 30px; border-right: none; border-bottom: none; }
+.crop-tr { top: 30px; right: 30px; border-left: none; border-bottom: none; }
+.crop-bl { bottom: 30px; left: 30px; border-right: none; border-top: none; }
+.crop-br { bottom: 30px; right: 30px; border-left: none; border-top: none; }
+
+/* REC Indicator */
+.rec-indicator {
+  position: absolute;
+  top: 40px;
+  right: 65px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.1em;
+}
+
+.rec-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #dc2743;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(220,39,67,0.8);
+  animation: rec-blink 1.5s infinite;
+}
+
+@keyframes rec-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Timecode */
+.timecode-indicator {
+  position: absolute;
+  bottom: 40px;
+  right: 65px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: rgba(197,160,89,0.6);
+  letter-spacing: 0.1em;
 }
 
 /* ── RESPONSIVE ── */
@@ -345,4 +424,5 @@
   .countdown-unit { min-width: 52px; padding: 0.65rem 0.75rem; }
   .countdown-value { font-size: 1.4rem; }
   .hero-editorial-label { max-width: 260px; }
+  .edit-ui-overlay { display: none; } /* Hide camera UI on small screens */
 }

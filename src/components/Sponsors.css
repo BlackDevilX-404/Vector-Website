@@ -1,0 +1,229 @@
+/* ============================================================
+   SPONSORS — Seamless horizontal ticker, navy + gold design
+   ============================================================ */
+
+/* ── SECTION ── */
+.sponsors-section {
+  background-color: var(--navy-dark);
+  padding: 5rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── GHOST WATERMARK ── */
+.sponsors-ghost-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 16vw, 14rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(197, 160, 89, 0.03);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+/* ── TOP / BOTTOM GOLD RULES ── */
+.sponsors-rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(197, 160, 89, 0.25) 20%,
+    rgba(197, 160, 89, 0.5)  50%,
+    rgba(197, 160, 89, 0.25) 80%,
+    transparent 100%
+  );
+  z-index: 1;
+}
+.sponsors-rule--top    { top: 0; }
+.sponsors-rule--bottom { bottom: 0; }
+
+/* ── HEADER ── */
+.sponsors-header {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 3.5rem;
+}
+
+.sponsors-header .section-eyebrow {
+  justify-content: center;
+}
+
+.sponsors-header .gold-bar {
+  margin: 0 auto 0;
+}
+
+.sponsors-title {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  margin-bottom: 1rem;
+}
+
+/* ── TICKER WRAPPER ── */
+.sponsors-ticker-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* Pause the whole track when user hovers anywhere in the strip */
+}
+
+.sponsors-ticker-wrapper:hover .sponsors-ticker-track {
+  animation-play-state: paused;
+}
+
+/* ── FADE MASKS (left & right edges) ── */
+.sponsors-fade-left,
+.sponsors-fade-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 140px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.sponsors-fade-left {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--navy-dark) 0%,
+    transparent 100%
+  );
+}
+
+.sponsors-fade-right {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    var(--navy-dark) 0%,
+    transparent 100%
+  );
+}
+
+/* ── SCROLLING TRACK ── */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.sponsors-ticker-track {
+  display: flex;
+  align-items: center;
+  /* No gap here — use margin-right on each card instead.
+     This ensures: total_width = N * (card + margin)
+     and -50% = exactly one full set, giving a perfect seamless loop. */
+  width: max-content;
+  padding: 0.75rem 0;
+  animation: ticker-scroll 40s linear infinite;
+  will-change: transform;
+}
+
+/* ── INDIVIDUAL SPONSOR CARD ── */
+.sponsor-card {
+  flex-shrink: 0;
+  /* Fixed 220×120 box — logos auto-fit inside without cropping */
+  width: 220px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* ~10% padding on each side → logo occupies ~80% of card area */
+  padding: 12px 18px;
+  margin-right: 1.5rem; /* replaces flex gap — applied to EVERY card including the last,
+                           so the seamless loop point at -50% is mathematically exact */
+  background: rgba(18, 33, 65, 0.6);
+  border: 1px solid rgba(197, 160, 89, 0.1);
+  border-top: 1.5px solid rgba(197, 160, 89, 0.2);
+  border-radius: 2px;
+  transition: background 0.3s var(--ease-in-out),
+              border-color 0.3s var(--ease-in-out),
+              box-shadow 0.3s var(--ease-in-out),
+              transform 0.3s var(--ease-out-expo);
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle shimmer layer */
+.sponsor-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(197, 160, 89, 0.05) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 2px;
+}
+
+.sponsor-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover — card lifts with gold glow */
+.sponsors-ticker-wrapper:hover .sponsor-card:hover {
+  transform: translateY(-4px) scale(1.04);
+  background: rgba(24, 45, 85, 0.9);
+  border-color: rgba(197, 160, 89, 0.45);
+  box-shadow:
+    0 0 18px rgba(197, 160, 89, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.sponsors-ticker-wrapper:hover .sponsor-card:hover::before {
+  opacity: 1;
+}
+
+/* ── LOGO IMAGE ── */
+.sponsor-logo {
+  /* Fill the padded area completely — never cropped, always fully visible */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+/* Slight zoom on card hover */
+.sponsors-ticker-wrapper:hover .sponsor-card:hover .sponsor-logo {
+  transform: scale(1.06);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .sponsors-section {
+    padding: 4rem 0 3rem;
+  }
+
+  .sponsors-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .sponsors-fade-left,
+  .sponsors-fade-right {
+    width: 60px;
+  }
+
+  .sponsor-card {
+    width: 160px;
+    height: 88px;
+    padding: 8px 12px;
+    margin-right: 1rem;
+  }
+
+  .sponsors-ticker-track {
+    animation-duration: 28s;
+  }
+}

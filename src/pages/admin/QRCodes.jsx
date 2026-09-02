@@ -105,7 +105,7 @@ const QRCodes = () => {
   const [downloadingAll, setDownloadingAll] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/participants')
+    fetch('/api/participants')
       .then(r => r.json())
       .then(data => {
         setParticipants(data.filter(p => p.participantId));

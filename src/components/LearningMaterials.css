@@ -125,13 +125,80 @@
   transform: scaleY(1);
 }
 
-/* Locked row — dimmer */
+/* Locked row — blurred content with lock overlay */
 .material-row-locked {
-  opacity: 0.62;
+  /* Row itself stays full opacity — only body/CTA blurred */
 }
-.material-row-locked:hover {
-  opacity: 0.78;
-  transform: translateX(3px);
+
+/* ── BLUR on body + CTA when locked ── */
+.material-body-blurred {
+  filter: blur(5px);
+  user-select: none;
+  pointer-events: none;
+  transition: filter 0.4s ease;
+}
+
+/* ── LOCK OVERLAY ── */
+.material-lock-overlay {
+  position: absolute;
+  /* Cover only the body + cta area (right of icon zone) */
+  top: 0;
+  left: 140px;   /* width of icon zone */
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.material-lock-icon {
+  font-size: 1rem;
+  opacity: 0.5;
+}
+
+.material-lock-text {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(244,240,232,0.35);
+}
+
+/* ── LOADING STATE ── */
+.materials-loading {
+  color: rgba(244,240,232,0.3);
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 3rem 0;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── TRAINER SLIDES GROUP DIVIDER ── */
+.materials-group-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.materials-group-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(197,160,89,0.5);
+  white-space: nowrap;
+}
+
+.materials-group-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(197,160,89,0.1);
 }
 
 /* ── ICON ZONE (left column) ── */
@@ -326,6 +393,14 @@
     padding-left: 1.5rem;
     justify-content: flex-start;
     padding-top: 0.2rem;
+  }
+  
+  .material-lock-overlay {
+    left: 0;
+    background: rgba(18, 33, 65, 0.4);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 3px;
   }
 
   .materials-ghost { font-size: clamp(4rem, 20vw, 8rem); right: -2%; }

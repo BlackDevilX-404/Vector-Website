@@ -1,40 +1,42 @@
 import { useEffect, useRef, useState } from 'react';
 import './EventData.css';
 
-/* ── Custom gold SVG icons ── */
+/* ── Custom SVG icons (File Metaphor) ── */
 const IconCrowd = () => (
-  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
-    <circle cx="24" cy="14" r="6" stroke="#c5a059" strokeWidth="1.8" />
-    <path d="M12 38c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="#c5a059" strokeWidth="1.8" strokeLinecap="round" />
-    <circle cx="10" cy="16" r="4" stroke="#c5a059" strokeWidth="1.4" opacity="0.55" />
-    <path d="M2 36c0-4.418 3.582-8 8-8" stroke="#c5a059" strokeWidth="1.4" strokeLinecap="round" opacity="0.55" />
-    <circle cx="38" cy="16" r="4" stroke="#c5a059" strokeWidth="1.4" opacity="0.55" />
-    <path d="M46 36c0-4.418-3.582-8-8-8" stroke="#c5a059" strokeWidth="1.4" strokeLinecap="round" opacity="0.55" />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+    <circle cx="9" cy="7" r="4"></circle>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
   </svg>
 );
 
 const IconKit = () => (
-  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
-    {/* Tote bag */}
-    <path d="M14 18h20l-3 22H17L14 18Z" stroke="#c5a059" strokeWidth="1.8" strokeLinejoin="round" />
-    <path d="M18 18c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="#c5a059" strokeWidth="1.8" strokeLinecap="round" />
-    {/* Pen nib detail */}
-    <line x1="24" y1="24" x2="24" y2="34" stroke="#c5a059" strokeWidth="1.2" opacity="0.6" strokeLinecap="round" />
-    <path d="M21 28l3 6 3-6" stroke="#c5a059" strokeWidth="1.2" opacity="0.6" strokeLinejoin="round" />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
   </svg>
 );
 
 const IconFood = () => (
-  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
-    {/* Plate */}
-    <circle cx="24" cy="28" r="14" stroke="#c5a059" strokeWidth="1.8" />
-    <circle cx="24" cy="28" r="9" stroke="#c5a059" strokeWidth="1.2" opacity="0.5" />
-    {/* Steam lines */}
-    <path d="M18 10 Q19 7 18 4" stroke="#c5a059" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
-    <path d="M24 10 Q25 7 24 4" stroke="#c5a059" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
-    <path d="M30 10 Q31 7 30 4" stroke="#c5a059" strokeWidth="1.4" strokeLinecap="round" opacity="0.7" />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+    <path d="M21 12c0 1.66-4.03 3-9 3s-9-1.34-9-3"></path>
+    <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path>
   </svg>
 );
+
+const KIT_ITEMS = [
+  'Customized mousepad',
+  'Mechanical Pencil',
+  'Certificate for each participant',
+];
+
+const FOOD_ITEMS = [
+  'Morning Refreshments',
+  'Lunch',
+  'Evening Refreshments',
+];
 
 /* ── Animated count-up hook ── */
 function useCountUp(target, duration = 1800, active = false) {
@@ -45,7 +47,6 @@ function useCountUp(target, duration = 1800, active = false) {
     const step = (ts) => {
       if (!start) start = ts;
       const progress = Math.min((ts - start) / duration, 1);
-      // ease-out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.floor(eased * target));
       if (progress < 1) requestAnimationFrame(step);
@@ -55,26 +56,11 @@ function useCountUp(target, duration = 1800, active = false) {
   return count;
 }
 
-/* ── Card data ── */
-const KIT_ITEMS = [
-  'Premium VECTOR T-shirt',
-  'Tote Bag',
-  'Notepad & Pen',
-  'Sticker Pack',
-  'Event Badge & Lanyard',
-];
-
-const FOOD_ITEMS = [
-  'Morning Tea & Coffee',
-  'Buffet Lunch (Veg & Non-Veg)',
-  'Evening High Tea',
-  'Continuous Water Stations',
-];
-
 const EventData = () => {
   const sectionRef = useRef(null);
   const [active, setActive] = useState(false);
-  const count = useCountUp(500, 1800, active);
+  const [selectedAsset, setSelectedAsset] = useState('participants');
+  const count = useCountUp(200, 1800, active);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -88,29 +74,17 @@ const EventData = () => {
       },
       { threshold: 0.15 }
     );
-    const cards = document.querySelectorAll('.data-card');
-    cards.forEach((c) => observer.observe(c));
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => {
-      cards.forEach((c) => observer.unobserve(c));
       if (sectionRef.current) observer.unobserve(sectionRef.current);
     };
   }, []);
 
   return (
-    <section id="logistics" className="event-data-section" ref={sectionRef}>
-
-      {/* Background aperture rings */}
-      <div className="logistics-bg-rings" aria-hidden="true">
-        <div className="logistics-ring logistics-ring-1" />
-        <div className="logistics-ring logistics-ring-2" />
-        <div className="logistics-ring logistics-ring-3" />
-      </div>
-
+    <section id="logistics" className="event-data-section reveal" ref={sectionRef}>
       <div className="container">
-
-        {/* ── Section header ── */}
-        <div className="event-data-header reveal">
+        
+        <div className="event-data-header">
           <h2 className="section-title section-title-light" style={{ textAlign: 'center' }}>
             Event Logistics
           </h2>
@@ -120,65 +94,113 @@ const EventData = () => {
           </p>
         </div>
 
-        {/* ── Gold connector line above cards ── */}
-        <div className="logistics-connector" aria-hidden="true">
-          <div className="connector-line" />
-          <div className="connector-dot connector-dot-1" />
-          <div className="connector-dot connector-dot-2" />
-          <div className="connector-dot connector-dot-3" />
-        </div>
-
-        {/* ── 3-column card grid ── */}
-        <div className="event-data-grid">
-
-          {/* Card 1 — Participants */}
-          <div className="data-card reveal delay-100">
-            <div className="card-accent-border" />
-            <div className="data-icon-wrapper">
-              <IconCrowd />
+        <div className="logistics-asset-bin">
+          
+          {/* LEFT: Asset List (Thumbnails) */}
+          <div className="bin-sidebar">
+            <div className="bin-header">
+              <span>PROJECT_ASSETS</span>
+              <span className="bin-icons">≡ ⊞</span>
             </div>
-            <h3 className="data-title">Total Participants</h3>
-            <div className="data-stat">
-              {count}<span className="data-stat-plus">+</span>
+            <div className="bin-files">
+              
+              <div 
+                className={`bin-file-item ${selectedAsset === 'participants' ? 'active' : ''}`}
+                onClick={() => setSelectedAsset('participants')}
+              >
+                <div className="file-icon"><IconCrowd /></div>
+                <div className="file-name">01_Participants.dat</div>
+                <div className="file-meta">8.2 MB</div>
+              </div>
+
+              <div 
+                className={`bin-file-item ${selectedAsset === 'kits' ? 'active' : ''}`}
+                onClick={() => setSelectedAsset('kits')}
+              >
+                <div className="file-icon"><IconKit /></div>
+                <div className="file-name">02_Event_Kits.pkg</div>
+                <div className="file-meta">14.0 MB</div>
+              </div>
+
+              <div 
+                className={`bin-file-item ${selectedAsset === 'food' ? 'active' : ''}`}
+                onClick={() => setSelectedAsset('food')}
+              >
+                <div className="file-icon"><IconFood /></div>
+                <div className="file-name">03_Catering.log</div>
+                <div className="file-meta">2.1 MB</div>
+              </div>
+
             </div>
-            <p className="data-desc">
-              Five hundred creative minds, one campus. The largest District Editorial Workshop in the region — and you're in it.
-            </p>
           </div>
 
-          {/* Card 2 — Event Kits */}
-          <div className="data-card data-card-featured reveal delay-200">
-            <div className="card-accent-border" />
-            <div className="card-featured-glow" aria-hidden="true" />
-            <div className="data-icon-wrapper">
-              <IconKit />
+          {/* RIGHT: Preview / Inspector Panel */}
+          <div className="bin-inspector">
+            <div className="inspector-header">
+              <span>PREVIEW_INSPECTOR</span>
+              <span>[ ] X</span>
             </div>
-            <h3 className="data-title">Event Kits</h3>
-            <p className="data-desc" style={{ marginBottom: '0.5rem' }}>
-              Your VECTOR kit — curated for makers, not attendees.
-            </p>
-            <ul className="data-list">
-              {KIT_ITEMS.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
+            
+            <div className="inspector-content">
+              {selectedAsset === 'participants' && (
+                <div className="preview-panel preview-participants">
+                  <div className="preview-icon-large"><IconCrowd /></div>
+                  <h3 className="preview-title">Total Participants</h3>
+                  <div className="preview-stat">
+                    {count}<span className="preview-stat-plus">+</span>
+                  </div>
+                  <p className="preview-desc">
+                    Two hundred creative minds, one campus. The largest District Editorial Workshop in the region — and you're in it.
+                  </p>
+                  <div className="preview-meta-list">
+                    <div className="meta-row"><span>Target:</span> <span>Creative Heads</span></div>
+                    <div className="meta-row"><span>Status:</span> <span className="status-ok">CONFIRMED</span></div>
+                  </div>
+                </div>
+              )}
 
-          {/* Card 3 — Refreshments */}
-          <div className="data-card reveal delay-300">
-            <div className="card-accent-border" />
-            <div className="data-icon-wrapper">
-              <IconFood />
+              {selectedAsset === 'kits' && (
+                <div className="preview-panel preview-kits">
+                  <div className="preview-icon-large"><IconKit /></div>
+                  <h3 className="preview-title">Event Kits</h3>
+                  <p className="preview-desc">
+                    Your VECTOR kit — curated for makers, not attendees.
+                  </p>
+                  <ul className="preview-list">
+                    {KIT_ITEMS.map((item, idx) => (
+                      <li key={idx}>
+                        <span className="list-bullet">▶</span> {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="preview-meta-list mt-auto">
+                    <div className="meta-row"><span>Distribution:</span> <span>At Check-in</span></div>
+                    <div className="meta-row"><span>Status:</span> <span className="status-ok">PACKED</span></div>
+                  </div>
+                </div>
+              )}
+
+              {selectedAsset === 'food' && (
+                <div className="preview-panel preview-food">
+                  <div className="preview-icon-large"><IconFood /></div>
+                  <h3 className="preview-title">Lunch & Refreshments</h3>
+                  <p className="preview-desc">
+                    Fuel for a full day of creation — quality catering from morning to dusk.
+                  </p>
+                  <ul className="preview-list">
+                    {FOOD_ITEMS.map((item, idx) => (
+                      <li key={idx}>
+                        <span className="list-bullet">▶</span> {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="preview-meta-list mt-auto">
+                    <div className="meta-row"><span>Schedule:</span> <span>Strict</span></div>
+                    <div className="meta-row"><span>Status:</span> <span className="status-ok">ROUTED</span></div>
+                  </div>
+                </div>
+              )}
             </div>
-            <h3 className="data-title">Lunch & Refreshments</h3>
-            <p className="data-desc" style={{ marginBottom: '0.5rem' }}>
-              Fuel for a full day of creation — quality catering from morning to dusk.
-            </p>
-            <ul className="data-list">
-              {FOOD_ITEMS.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
           </div>
 
         </div>

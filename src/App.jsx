@@ -7,6 +7,7 @@ import Attendance from './pages/admin/Attendance';
 import ExcelUpload from './pages/admin/ExcelUpload';
 import QRCodes from './pages/admin/QRCodes';
 import Scanner from './pages/admin/Scanner';
+import LearningMaterialsAdmin from './pages/admin/LearningMaterialsAdmin';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="upload" element={<ExcelUpload />} />
           <Route path="qrcodes" element={<QRCodes />} />
           <Route path="scanner" element={<Scanner />} />
+          <Route path="materials" element={<LearningMaterialsAdmin />} />
         </Route>
       </Routes>
     </BrowserRouter>

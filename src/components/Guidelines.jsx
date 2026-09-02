@@ -20,16 +20,16 @@ const Guidelines = () => {
       desc: 'All attendees, sponsors, partners, volunteers, and staff are required to agree with the following code of conduct. Organizers will enforce this code throughout the event to ensure a safe environment for everybody.'
     },
     {
-      title: 'ID & Check-in',
-      desc: 'Please bring a valid photo ID and your registration confirmation email. Check-in opens at 8:00 AM at the main entrance of Sri Shakthi Institute.'
+      title: 'Arrival & Check-in',
+      desc: 'Check-in opens at 8:00 AM at the designated venue. Attendance will be verified at the registration desk, and event kits will be distributed accordingly.'
     },
     {
       title: 'Equipment',
-      desc: 'If participating in hands-on sessions, please bring your own laptop and charger. We will provide high-speed Wi-Fi and power outlets at every workstation.'
+      desc: 'Participants are required to bring a laptop and any necessary items for the workshop. Wi-Fi and power outlets will be provided to participants accordingly. Also participants are advised to carry their water bottle if required.'
     },
     {
-      title: 'Health & Safety',
-      desc: 'Follow all venue safety regulations. Medical staff will be on standby in the designated first-aid room throughout the event.'
+      title: 'No Food Allowed',
+      desc: 'Please note that food and beverages are strictly prohibited inside the event hall. Dedicated catering and refreshment zones will be available for all attendees during scheduled breaks.'
     }
   ];
 

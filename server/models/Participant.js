@@ -10,7 +10,7 @@ const participantSchema = new mongoose.Schema({
   registrationDate: { type: Date, default: Date.now },
 
   // New fields from Excel upload
-  sNo: { type: Number },
+  riId: { type: Number },
   clubName: { type: String, default: '' },
   group: { type: String, enum: ['Group 1', 'Group 2', 'Group 3', 'Group 4'], default: 'Group 1' },
   portfolio: { type: String, default: '' },
@@ -20,7 +20,7 @@ const participantSchema = new mongoose.Schema({
   morningAttendance: { type: Boolean, default: false },
   afternoonAttendance: { type: Boolean, default: false },
   morningRefreshments: { type: Boolean, default: false },
-  afternoonRefreshments: { type: Boolean, default: false },
+  eveningRefreshments: { type: Boolean, default: false },
   lunch: { type: Boolean, default: false },
   kitReceived: { type: Boolean, default: false },
 });

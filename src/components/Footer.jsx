@@ -37,13 +37,8 @@ const Footer = () => (
         {/* Contact */}
         <div className="footer-contact">
           <h3>Contact</h3>
-          <p>Sri Shakthi Institute of Engineering and Technology</p>
-          <p>contact@vectorevent.com</p>
-          <div className="social-links">
-            <a href="#" className="social-icon" aria-label="Instagram"><span>IG</span></a>
-            <a href="#" className="social-icon" aria-label="LinkedIn"><span>LI</span></a>
-            <a href="#" className="social-icon" aria-label="Twitter"><span>TW</span></a>
-          </div>
+          <p>Email: vector.dews3206@gmail.com</p>
+          <p>Contact no: +91 8111055911</p>
         </div>
 
       </div>

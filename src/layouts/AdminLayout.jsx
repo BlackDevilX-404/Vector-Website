@@ -5,11 +5,12 @@ import Login from '../pages/admin/Login';
 import './AdminLayout.css';
 
 const NAV_LINKS = [
-  { to: '/admin',           label: 'Dashboard',        icon: '📊', end: true },
-  { to: '/admin/upload',    label: 'Upload Excel',      icon: '📤' },
-  { to: '/admin/qrcodes',   label: 'QR Codes',          icon: '🔲' },
-  { to: '/admin/scanner',   label: 'QR Scanner',        icon: '📷' },
-  { to: '/admin/attendance',label: 'Attendance',         icon: '✅' },
+  { to: '/admin',           label: 'Dashboard',           icon: '📊', end: true },
+  { to: '/admin/upload',    label: 'Upload Excel',         icon: '📤' },
+  { to: '/admin/qrcodes',   label: 'QR Codes',             icon: '🔲' },
+  { to: '/admin/scanner',   label: 'QR Scanner',           icon: '📷' },
+  { to: '/admin/attendance',label: 'Attendance',            icon: '✅' },
+  { to: '/admin/materials', label: 'Learning Materials',   icon: '📚' },
 ];
 
 const AdminLayout = () => {
