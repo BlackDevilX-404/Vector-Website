@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vector-website.onrender.com/sitemap.xml
+Sitemap: https://www.vector3206.com/sitemap.xml
 
