@@ -48,12 +48,12 @@ const Sponsors = () => {
 
         {/* The moving track — hover on the wrapper pauses it */}
         <div className="sponsors-ticker-track">
-          {TICKER_ITEMS.map(({ file, name }, idx) => (
+          {TICKER_ITEMS.map(({ file, name, cover }, idx) => (
             <div className="sponsor-card" key={`${file}-${idx}`}>
               <img
                 src={`/sponsors/${encodeURIComponent(file)}`}
                 alt={name}
-                className="sponsor-logo"
+                className={`sponsor-logo ${cover ? 'sponsor-logo-cover' : ''}`}
                 loading="lazy"
                 draggable="false"
               />

@@ -25,7 +25,7 @@ const Guidelines = () => {
     },
     {
       title: 'Equipment',
-      desc: 'Participants are required to bring a laptop and any necessary items for the workshop. Wi-Fi and power outlets will be provided to participants accordingly. Also participants are advised to carry their water bottle if required.'
+      desc: 'Participants are required to bring the following items: Laptop & Charger, Mouse, Notepad & Pen, and a Water Bottle. Wi-Fi and power outlets will be provided at the venue.'
     },
     {
       title: 'No Food Allowed',

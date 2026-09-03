@@ -4,9 +4,32 @@
   gap: 2rem;
 }
 
+/* ── Page header — always stacks title above subtitle ── */
 .admin-header {
   margin-bottom: 1rem;
 }
+
+.admin-header .page-title {
+  font-family: var(--font-display, 'Oswald', sans-serif);
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #f1f5f9;
+  margin: 0 0 0.5rem;
+  line-height: 1.1;
+  word-break: break-word;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+
 
 .admin-users-grid {
   display: grid;
@@ -20,6 +43,16 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 600px) {
+  .admin-list-card, .admin-add-card {
+    padding: 1.25rem;
+  }
+  .admin-list-card h3, .admin-add-card h3 {
+    font-size: 1.1rem;
+  }
+}
+
 
 .admin-list-card, .admin-add-card {
   padding: 2rem;

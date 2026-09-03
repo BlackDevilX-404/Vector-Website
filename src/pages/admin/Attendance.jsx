@@ -89,21 +89,21 @@ const Attendance = () => {
                 const isFullyAttended = p.morningAttendance && p.afternoonAttendance;
                 return (
                   <tr key={p._id} className={isFullyAttended ? 'row-attended' : ''}>
-                    <td className="font-medium">{p.name}</td>
-                    <td>{p.email}</td>
-                    <td className="capitalize">{p.role}</td>
-                    <td>{p.institution}</td>
-                    <td>
+                    <td data-label="Name" className="font-medium">{p.name}</td>
+                    <td data-label="Email">{p.email}</td>
+                    <td data-label="Role" className="capitalize">{p.role}</td>
+                    <td data-label="Institution">{p.institution}</td>
+                    <td data-label="Morning">
                       <span className={`status-badge ${p.morningAttendance ? 'attended' : 'pending'}`}>
                         {p.morningAttendance ? 'Attended' : 'Pending'}
                       </span>
                     </td>
-                    <td>
+                    <td data-label="Afternoon">
                       <span className={`status-badge ${p.afternoonAttendance ? 'attended' : 'pending'}`}>
                         {p.afternoonAttendance ? 'Attended' : 'Pending'}
                       </span>
                     </td>
-                    <td>
+                    <td data-label="Mark Morning">
                       <button 
                         className={`btn-toggle ${p.morningAttendance ? 'btn-undo' : 'btn-mark'}`}
                         onClick={() => toggleAttendance(p._id, 'morningAttendance', p.morningAttendance)}
@@ -111,7 +111,7 @@ const Attendance = () => {
                         {p.morningAttendance ? 'Undo Morning' : 'Mark Morning'}
                       </button>
                     </td>
-                    <td>
+                    <td data-label="Mark Afternoon">
                       <button 
                         className={`btn-toggle ${p.afternoonAttendance ? 'btn-undo' : 'btn-mark'}`}
                         onClick={() => toggleAttendance(p._id, 'afternoonAttendance', p.afternoonAttendance)}

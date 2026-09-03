@@ -4,6 +4,7 @@
 
 .live-edit-wrapper {
   display: inline-block;
+  max-width: 100%;
   position: relative;
   font-family: var(--font-display);
   font-weight: 500;
@@ -13,13 +14,15 @@
 .live-edit-container {
   position: relative;
   display: inline-block;
+  max-width: 100%;
 }
 
 /* The text being typed/deleted */
 .live-edit-text {
   position: relative;
-  display: inline-block;
-  white-space: pre;
+  display: inline;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 /* The blinking caret */

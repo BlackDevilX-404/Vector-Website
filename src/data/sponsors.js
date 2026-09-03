@@ -9,8 +9,8 @@
  * ─────────────────────────────────────────────────────────────
  */
 const SPONSORS = [
-  { file: 'sponsor 1.jpeg', name: 'Sponsor 1' },
-  { file: 'Sponsor 2.jpeg', name: 'Sponsor 2' },
+  { file: 'buff.jpg', name: 'Buff Coimbatore Campus' },
+  { file: 'Sponsor 2.jpeg', name: 'LumerLabs', cover: true },
   { file: 'Sponsor 3.jpeg', name: 'Sponsor 3' },
 ];
 

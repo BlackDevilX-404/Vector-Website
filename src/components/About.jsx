@@ -10,7 +10,7 @@ const FEATURES = [
 
 const STATS = [
   { id: 'stat-1', label: 'Attendees', value: '200+', type: 'Capacity' },
-  { id: 'stat-2', label: 'Sessions', value: '2+', type: 'Tracks' },
+  { id: 'stat-2', label: 'Sessions', value: '5+', type: 'Tracks' },
   { id: 'stat-3', label: 'Immersion', value: '1 Day', type: 'Duration' },
 ];
 
@@ -71,13 +71,66 @@ const About = () => {
                 {/* Vector SVG that changes slightly based on activeLayer */}
                 <div className="vector-graphics-container">
                    <svg viewBox="0 0 400 300" className="vector-path-svg">
-                      <path className="vector-line" d={activeLayer === 'layer-1' ? "M 50 150 Q 150 50 250 200 T 350 100" : activeLayer === 'layer-2' ? "M 50 100 C 150 250, 250 50, 350 200" : "M 100 200 L 200 50 L 300 250 Z"} fill="none" />
-                      <circle cx="50" cy={activeLayer === 'layer-2' ? '100' : '150'} r="4" className="vector-node" />
-                      <circle cx="250" cy="200" r="4" className="vector-node active-node" />
-                      <circle cx="350" cy={activeLayer === 'layer-1' ? '100' : '200'} r="4" className="vector-node" />
-                      <line x1={activeLayer === 'layer-2' ? '150' : '150'} y1={activeLayer === 'layer-2' ? '250' : '50'} x2="50" y2={activeLayer === 'layer-2' ? '100' : '150'} className="vector-handle" />
-                      <line x1={activeLayer === 'layer-2' ? '250' : '150'} y1={activeLayer === 'layer-2' ? '50' : '50'} x2={activeLayer === 'layer-2' ? '350' : '250'} y2="200" className="vector-handle" />
-                      <circle cx={activeLayer === 'layer-2' ? '150' : '150'} cy={activeLayer === 'layer-2' ? '250' : '50'} r="3" className="vector-handle-point" />
+                      {activeLayer === 'layer-1' && (
+                        <>
+                          <path className="vector-line" d="M 50 150 Q 150 50 250 200 T 350 100" fill="none" />
+                          <circle cx="50" cy="150" r="4" className="vector-node" />
+                          <circle cx="250" cy="200" r="4" className="vector-node active-node" />
+                          <circle cx="350" cy="100" r="4" className="vector-node" />
+                          <line x1="150" y1="50" x2="50" y2="150" className="vector-handle" />
+                          <line x1="150" y1="50" x2="250" y2="200" className="vector-handle" />
+                          <circle cx="150" cy="50" r="3" className="vector-handle-point" />
+                        </>
+                      )}
+                      {activeLayer === 'layer-2' && (
+                        <>
+                          <path className="vector-line" d="M 50 100 C 150 250, 250 50, 350 200" fill="none" />
+                          <circle cx="50" cy="100" r="4" className="vector-node" />
+                          <circle cx="250" cy="200" r="4" className="vector-node active-node" />
+                          <circle cx="350" cy="200" r="4" className="vector-node" />
+                          <line x1="150" y1="250" x2="50" y2="100" className="vector-handle" />
+                          <line x1="250" y1="50" x2="350" y2="200" className="vector-handle" />
+                          <circle cx="150" cy="250" r="3" className="vector-handle-point" />
+                          <circle cx="250" cy="50" r="3" className="vector-handle-point" />
+                        </>
+                      )}
+                      {activeLayer === 'layer-3' && (
+                        <>
+                          <path className="vector-line" d="M 50 150 C 150 50, 250 50, 350 150 C 250 250, 150 250, 50 150 Z" fill="none" />
+                          <circle cx="50" cy="150" r="4" className="vector-node" />
+                          <circle cx="350" cy="150" r="4" className="vector-node" />
+                          <circle cx="200" cy="150" r="4" className="vector-node active-node" />
+                          <line x1="200" y1="50" x2="50" y2="150" className="vector-handle" />
+                          <line x1="200" y1="250" x2="350" y2="150" className="vector-handle" />
+                          <circle cx="200" cy="50" r="3" className="vector-handle-point" />
+                          <circle cx="200" cy="250" r="3" className="vector-handle-point" />
+                        </>
+                      )}
+                      {activeLayer === 'layer-4' && (
+                        <>
+                          {/* Construction grid / lines */}
+                          <line x1="200" y1="30" x2="200" y2="270" className="vector-handle" />
+                          <line x1="50" y1="220" x2="350" y2="220" className="vector-handle" />
+                          <circle cx="200" cy="165" r="55" fill="none" className="vector-handle" />
+
+                          {/* Secondary inner geometric shape */}
+                          <path className="vector-line" style={{ strokeWidth: 1, opacity: 0.5 }} d="M 150 220 L 250 220 L 200 110 Z" fill="none" />
+
+                          {/* Primary Triangle Logo */}
+                          <path className="vector-line" d="M 100 220 L 200 60 L 300 220 Z" fill="none" />
+                          
+                          {/* Main Nodes */}
+                          <circle cx="100" cy="220" r="4" className="vector-node" />
+                          <circle cx="200" cy="60" r="4" className="vector-node active-node" />
+                          <circle cx="300" cy="220" r="4" className="vector-node" />
+                          
+                          {/* Construction Nodes */}
+                          <circle cx="200" cy="165" r="3" className="vector-handle-point" />
+                          <circle cx="150" cy="220" r="3" className="vector-handle-point" />
+                          <circle cx="250" cy="220" r="3" className="vector-handle-point" />
+                          <circle cx="200" cy="110" r="3" className="vector-handle-point" />
+                        </>
+                      )}
                    </svg>
                    <div className="pen-cursor">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>

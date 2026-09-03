@@ -19,17 +19,21 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
+    // Nuke any lingering localStorage token from the old version
+    localStorage.removeItem('adminToken');
+
+    // Check current session (survives refresh, dies on tab close)
+    const token = sessionStorage.getItem('adminToken');
     if (token) setIsAuthenticated(true);
   }, []);
 
   const handleLogin = (token) => {
-    localStorage.setItem('adminToken', token);
+    sessionStorage.setItem('adminToken', token);
     setIsAuthenticated(true);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminToken');
     setIsAuthenticated(false);
   };
 
@@ -76,7 +80,7 @@ const AdminLayout = () => {
             <span className="nav-icon">🚪</span>
             Log Out
           </button>
-          <a href="/" className="admin-link" style={{ display: 'flex', marginTop: '0.5rem' }}>
+          <a href="/" className="admin-link" onClick={handleLogout} style={{ display: 'flex', marginTop: '0.5rem' }}>
             <span className="nav-icon">←</span>
             Public Site
           </a>

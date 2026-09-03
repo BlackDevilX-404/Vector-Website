@@ -111,8 +111,8 @@
 
 /* ── SCROLLING TRACK ── */
 @keyframes ticker-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0%   { transform: translate3d(0, 0, 0) rotate(0.001deg); }
+  100% { transform: translate3d(-50%, 0, 0) rotate(0.001deg); }
 }
 
 .sponsors-ticker-track {
@@ -123,8 +123,10 @@
      and -50% = exactly one full set, giving a perfect seamless loop. */
   width: max-content;
   padding: 0.75rem 0;
-  animation: ticker-scroll 40s linear infinite;
+  animation: ticker-scroll 55s linear infinite;
   will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* ── INDIVIDUAL SPONSOR CARD ── */
@@ -136,13 +138,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* ~10% padding on each side → logo occupies ~80% of card area */
-  padding: 12px 18px;
+  /* No padding so the logo fills the card completely */
+  padding: 0;
   margin-right: 1.5rem; /* replaces flex gap — applied to EVERY card including the last,
                            so the seamless loop point at -50% is mathematically exact */
-  background: rgba(18, 33, 65, 0.6);
-  border: 1px solid rgba(197, 160, 89, 0.1);
-  border-top: 1.5px solid rgba(197, 160, 89, 0.2);
+  background: #ffffff;
   border-radius: 2px;
   transition: background 0.3s var(--ease-in-out),
               border-color 0.3s var(--ease-in-out),
@@ -151,6 +151,9 @@
   cursor: default;
   position: relative;
   overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* Subtle shimmer layer */
@@ -172,8 +175,7 @@
 /* Hover — card lifts with gold glow */
 .sponsors-ticker-wrapper:hover .sponsor-card:hover {
   transform: translateY(-4px) scale(1.04);
-  background: rgba(24, 45, 85, 0.9);
-  border-color: rgba(197, 160, 89, 0.45);
+  background: #ffffff;
   box-shadow:
     0 0 18px rgba(197, 160, 89, 0.15),
     0 8px 24px rgba(0, 0, 0, 0.4);
@@ -188,12 +190,16 @@
   /* Fill the padded area completely — never cropped, always fully visible */
   max-width: 100%;
   max-height: 100%;
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: center;
   display: block;
   transition: transform 0.4s var(--ease-out-expo);
+}
+
+.sponsor-logo.sponsor-logo-cover {
+  object-fit: cover;
 }
 
 /* Slight zoom on card hover */
@@ -219,11 +225,11 @@
   .sponsor-card {
     width: 160px;
     height: 88px;
-    padding: 8px 12px;
+    padding: 0;
     margin-right: 1rem;
   }
 
   .sponsors-ticker-track {
-    animation-duration: 28s;
+    animation-duration: 40s;
   }
 }

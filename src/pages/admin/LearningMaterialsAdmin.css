@@ -297,7 +297,7 @@
   max-width: 140px;
 }
 
-/* ── RESPONSIVE ── */
+/* ── Responsive ── */
 @media (max-width: 1000px) {
   .lm-card {
     grid-template-columns: 1fr;
@@ -310,3 +310,24 @@
   }
   .lm-toggle-hint { max-width: none; }
 }
+
+@media (max-width: 640px) {
+  /* URL input row: wrap so save button goes below */
+  .lm-url-row {
+    flex-wrap: wrap;
+  }
+  .lm-url-input {
+    width: 100%;
+    flex: unset;
+  }
+  .lm-save-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Card padding tighter on small screens */
+  .lm-card {
+    padding: 1rem;
+  }
+}
+

@@ -15,7 +15,6 @@ const Scanner = () => {
   const [scanning, setScanning] = useState(false);
   const [participant, setParticipant] = useState(null);
   const [checkins, setCheckins] = useState({});
-  const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState('');
   const [scanError, setScanError] = useState('');
   const [manualId, setManualId] = useState('');
@@ -47,8 +46,8 @@ const Scanner = () => {
       const state = {};
       CHECKIN_FIELDS.forEach(f => { state[f.key] = data[f.key] || false; });
       setCheckins(state);
-    } catch (err) {
-      setScanError(err.message);
+    } catch (error) {
+      setScanError(error.message);
       setParticipant(null);
     }
   };

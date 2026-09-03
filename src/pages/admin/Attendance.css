@@ -130,10 +130,63 @@
 @media (max-width: 768px) {
   .attendance-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 1rem;
   }
   .search-bar input {
     width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Table → card rows */
+  .table-container {
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+  }
+  .admin-table thead {
+    display: none;
+  }
+  .admin-table,
+  .admin-table tbody,
+  .admin-table tr,
+  .admin-table td {
+    display: block;
+    width: 100%;
+  }
+  .admin-table tr {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+  .admin-table tr.row-attended {
+    border-color: rgba(34,197,94,0.25);
+  }
+  .admin-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.35rem 0;
+    border: none;
+    font-size: 0.875rem;
+    gap: 0.5rem;
+  }
+  .admin-table td::before {
+    content: attr(data-label);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    flex-shrink: 0;
+    min-width: 90px;
+  }
+  .btn-toggle {
+    width: 100%;
+    text-align: center;
   }
 }
+

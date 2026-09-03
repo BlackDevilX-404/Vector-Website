@@ -275,12 +275,12 @@ const ExcelUpload = () => {
             <tbody>
               {filteredParticipants.map(p => (
                 <tr key={p._id}>
-                  <td>{p.riId || p.sNo || '-'}</td>
-                  <td><strong style={{ color: 'var(--gold)' }}>{p.participantId}</strong></td>
-                  <td>{p.name}</td>
-                  <td>{p.clubName || p.institution}</td>
-                  <td>{p.group}</td>
-                  <td>
+                  <td data-label="RI ID">{p.riId || p.sNo || '-'}</td>
+                  <td data-label="Participant ID"><strong style={{ color: 'var(--gold)' }}>{p.participantId}</strong></td>
+                  <td data-label="Name">{p.name}</td>
+                  <td data-label="Club">{p.clubName || p.institution}</td>
+                  <td data-label="Group">{p.group}</td>
+                  <td data-label="Actions">
                     <button className="btn-delete" onClick={() => handleDelete(p._id, p.name)}>Delete</button>
                   </td>
                 </tr>

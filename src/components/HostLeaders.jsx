@@ -42,7 +42,7 @@ const clubs = [
     members: [
       { name: 'Rtr. Saran', portfolio: 'President',  tagline: 'Leading with vision and conviction.',    photo: '/photos/nexus-1.jpg' },
       { name: 'Rtr. Akshaya Lakshmi', portfolio: 'Secretary Administration',  tagline: 'Administering every detail with care.',  photo: '/photos/nexus-2.jpg' },
-      { name: 'Rtr. Koushik Kumar', portfolio: 'Secretary Communication',  tagline: 'Keeping every commitment on track.',     photo: '/photos/nexus-3.jpg' },
+      { name: 'Rtr. Koushik Kumar', portfolio: 'Secretary Communication',  tagline: 'Keeping every commitment on track.',     photo: '/photos/nexus-3.jpeg' },
     ],
   },
   {

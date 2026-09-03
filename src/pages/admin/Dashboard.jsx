@@ -180,13 +180,13 @@ const Dashboard = () => {
             ) : (
               filteredParticipants.map(p => (
                 <tr key={p._id}>
-                  <td className="pid-cell">{p.participantId || '—'}</td>
-                  <td className="font-medium">{p.name}</td>
-                  <td>{p.clubName || '—'}</td>
-                  <td>{p.group || '—'}</td>
-                  <td>{p.portfolio || '—'}</td>
+                  <td data-label="ID" className="pid-cell">{p.participantId || '—'}</td>
+                  <td data-label="Name" className="font-medium">{p.name}</td>
+                  <td data-label="Club">{p.clubName || '—'}</td>
+                  <td data-label="Group">{p.group || '—'}</td>
+                  <td data-label="Portfolio">{p.portfolio || '—'}</td>
                   {METRICS.map(m => (
-                    <td key={m.key} className="dot-cell">
+                    <td key={m.key} data-label={m.label} className="dot-cell">
                       <StatusDot on={!!p[m.key]} />
                     </td>
                   ))}
