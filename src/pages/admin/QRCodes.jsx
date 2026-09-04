@@ -105,8 +105,10 @@ async function generateIDCard(participant) {
   // 6. Stamp QR — fills the entire grey box
   ctx.drawImage(qrCanvas, QR_X, QR_Y, QR_W, QR_H);
 
-  // 7. Participant name
-  const nameText = (participant.name || '').trim();
+  // 7. Participant name with "Rtr." prefix
+  const rawName = (participant.name || '').trim();
+  const strippedName = rawName.replace(/^rtr\.?\s*/i, '');
+  const nameText = `Rtr. ${strippedName.toUpperCase()}`;
   
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
@@ -122,7 +124,7 @@ async function generateIDCard(participant) {
   ctx.fillText(nameText, TEXT_X, NAME_Y);
 
   // 8. Club name
-  const clubText = (participant.clubName || '').trim();
+  const clubText = (participant.clubName || '').toUpperCase();
   const maxClubWidth = 460;
   let clubFontSize = 20;
   ctx.font         = `${clubFontSize}px MontserratRegular, sans-serif`;
