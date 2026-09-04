@@ -100,11 +100,30 @@ const Scanner = () => {
       try {
         const qr = new Html5Qrcode('qr-reader');
         html5QrRef.current = qr;
+        
+        // Request higher resolution for better distance scanning, and continuous focus if supported.
+        const cameraConfig = { 
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          advanced: [{ focusMode: 'continuous' }]
+        };
+
+        // Increase scanning area (90% of screen) so it doesn't need to be perfectly aligned in a small box.
+        const scannerConfig = { 
+          fps: 15,
+          qrbox: (videoWidth, videoHeight) => {
+            const minEdge = Math.min(videoWidth, videoHeight);
+            const size = Math.floor(minEdge * 0.9);
+            return { width: size, height: size };
+          }
+        };
+
         await qr.start(
-          { facingMode: 'environment' },
-          { fps: 10, qrbox: { width: 250, height: 250 } },
+          cameraConfig,
+          scannerConfig,
           handleScanSuccess,
-          () => {}
+          () => {} // Ignore continuous scan errors (usually just "no qr found in this frame")
         );
       } catch (err) {
         setScanError('Camera access denied or unavailable.');

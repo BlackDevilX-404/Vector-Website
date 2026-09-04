@@ -253,6 +253,26 @@ app.delete('/api/participants/:id', async (req, res) => {
   }
 });
 
+// PUT update participant details
+app.put('/api/participants/:id', async (req, res) => {
+  try {
+    const { name, clubName } = req.body;
+    const update = {};
+    if (name !== undefined) update.name = name;
+    if (clubName !== undefined) update.clubName = clubName;
+
+    const participant = await Participant.findByIdAndUpdate(
+      req.params.id,
+      update,
+      { new: true }
+    );
+    if (!participant) return res.status(404).json({ error: 'Participant not found' });
+    res.json(participant);
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to update participant' });
+  }
+});
+
 // PUT update check-in fields
 app.put('/api/participants/:id/checkin', async (req, res) => {
   try {

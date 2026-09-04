@@ -105,10 +105,8 @@ async function generateIDCard(participant) {
   // 6. Stamp QR — fills the entire grey box
   ctx.drawImage(qrCanvas, QR_X, QR_Y, QR_W, QR_H);
 
-  // 7. Participant name with "Rtr." prefix
-  const rawName = (participant.name || '').trim();
-  const strippedName = rawName.replace(/^rtr\.?\s*/i, '');
-  const nameText = `Rtr. ${strippedName.toUpperCase()}`;
+  // 7. Participant name
+  const nameText = (participant.name || '').trim();
   
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
@@ -124,7 +122,7 @@ async function generateIDCard(participant) {
   ctx.fillText(nameText, TEXT_X, NAME_Y);
 
   // 8. Club name
-  const clubText = (participant.clubName || '').toUpperCase();
+  const clubText = (participant.clubName || '').trim();
   const maxClubWidth = 460;
   let clubFontSize = 20;
   ctx.font         = `${clubFontSize}px MontserratRegular, sans-serif`;
@@ -171,7 +169,7 @@ async function generateIDCard(participant) {
 }
 
 // ─── Individual ID Card component ─────────────────────────────────────────────
-const IDCard = ({ participant }) => {
+const IDCard = ({ participant, onUpdate }) => {
   const [editedName, setEditedName] = useState(participant.name || '');
   const [editedClub, setEditedClub] = useState(participant.clubName || '');
   const [dataUrl, setDataUrl]       = useState(null);
@@ -191,13 +189,29 @@ const IDCard = ({ participant }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleNameSave = () => {
+  const handleNameSave = async () => {
     setEditingName(false);
+    if (participant._id) {
+      await fetch(`/api/participants/${participant._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: editedName })
+      });
+    }
+    onUpdate && onUpdate(participant.participantId, { name: editedName });
     regenerate(editedName, editedClub);
   };
 
-  const handleClubSave = () => {
+  const handleClubSave = async () => {
     setEditingClub(false);
+    if (participant._id) {
+      await fetch(`/api/participants/${participant._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clubName: editedClub })
+      });
+    }
+    onUpdate && onUpdate(participant.participantId, { clubName: editedClub });
     regenerate(editedName, editedClub);
   };
 
@@ -285,10 +299,16 @@ const QRCodes = () => {
   const [groupFilter, setGroupFilter]     = useState('All');
   const [downloadingAll, setDownloadingAll] = useState(false);
 
+  const handleUpdateParticipant = (id, updates) => {
+    setParticipants(prev => prev.map(p => p.participantId === id ? { ...p, ...updates } : p));
+  };
+
   useEffect(() => {
     fetch('/api/participants')
       .then(r => r.json())
       .then(data => {
+        // We do not format the data here so that the user's edits from the DB
+        // are preserved exactly as they typed them (e.g. custom casing, without 'Rtr.').
         setParticipants(data.filter(p => p.participantId));
         setLoading(false);
       })
@@ -371,7 +391,7 @@ const QRCodes = () => {
       ) : (
         <div className="idcard-grid">
           {filtered.map(p => (
-            <IDCard key={p._id} participant={p} />
+            <IDCard key={p._id} participant={p} onUpdate={handleUpdateParticipant} />
           ))}
         </div>
       )}
